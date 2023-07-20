@@ -10,6 +10,7 @@ import models.usuario.Usuario;
 import presenters.TelaPrincipalPresenter;
 import views.TelaAdminView;
 
+
 public class TelaAdminPresenter {
 
     final private TelaAdminView telaAdmin;
@@ -56,6 +57,14 @@ public class TelaAdminPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new TelaUsuariosNaoAutenticadosPresenter(lista, telaP);
+            }
+        });
+        
+        telaAdmin.getBtnEnviarNotificacao().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaNotificacoesPresenter(lista, telaP);
+                
             }
         });
     }

@@ -33,6 +33,13 @@ public class TelaUsuarioComumPresenter {
             }
         });
         
+        telaUsuario.getBtnNotificacao().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaNotificacoesComumPresenter(user);
+            }
+        });
+        
     }
 
     public JInternalFrame getTelaUsuarioComumView() {

@@ -24,8 +24,11 @@ public class Usuario {
         this.isAdmin = isAdmin;
         this.isAutenticado = isAutenticado;
         this.dataCadastro = data.format(formatterData);
+        this.notificacoes = new ArrayList<>();
     }
-    
+    public void setNotificacoesEnviadas(Integer qtd){
+        this.qtdNotificacao = qtd;
+    }
     public Integer getQtdNotificacoesLidas(){
         return this.qtdNotificacoesLidas;
     }
