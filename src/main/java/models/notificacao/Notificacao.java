@@ -2,9 +2,9 @@ package models.notificacao;
 
 
 public class Notificacao {
-    private String msg;
+    final private String msg;
     private boolean foiLida;
-    private String remetente;
+    final private String remetente;
     
     public Notificacao(String mensagem, String remetente){
         this.msg = mensagem;

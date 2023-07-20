@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import models.usuario.Usuario;
 import presenters.TelaPrincipalPresenter;
-import services.arquivoslog.GerenciadorDeArquivoService;
+import com.ufes.logadapter.GerenciadorDeArquivoService;
 import views.UsuariosNaoAutenticadosView;
 
 public class TelaUsuariosNaoAutenticadosPresenter {

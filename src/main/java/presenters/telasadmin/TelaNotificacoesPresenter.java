@@ -13,12 +13,12 @@ import javax.swing.table.DefaultTableModel;
 import models.notificacao.Notificacao;
 import models.usuario.Usuario;
 import presenters.TelaPrincipalPresenter;
-import services.arquivoslog.GerenciadorDeArquivoService;
+import com.ufes.logadapter.GerenciadorDeArquivoService;
 import views.TelaNotificacoesView;
 
 public class TelaNotificacoesPresenter {
 
-    private TelaNotificacoesView tela;
+    final private TelaNotificacoesView tela;
     private ArrayList<Usuario> lista;
     private JTable tabela;
     private StringBuilder usersSelecionados;

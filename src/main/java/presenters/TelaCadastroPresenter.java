@@ -11,11 +11,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import models.usuario.Usuario;
 import java.util.List;
-import services.arquivoslog.GerenciadorDeArquivoService;
 import services.factoryuser.UsuarioFactory;
 import services.usuario.GerenciaUsuariosService;
-
 import views.TelaCadastroView;
+import com.ufes.logadapter.GerenciadorDeArquivoService;
+
 
 public class TelaCadastroPresenter {
 
@@ -25,6 +25,7 @@ public class TelaCadastroPresenter {
     final private GerenciadorDeArquivoService gerenciadorArquivo;
     final private String OPERACAO = "Inclusão";
     private String tipoArquivo;
+    
 
     public TelaCadastroPresenter(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP, TelaSistemaPresenter tela) {
         this.telaCadastro = new TelaCadastroView();
