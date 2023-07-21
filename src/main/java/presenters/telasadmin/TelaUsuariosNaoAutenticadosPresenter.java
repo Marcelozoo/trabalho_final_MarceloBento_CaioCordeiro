@@ -22,7 +22,7 @@ public class TelaUsuariosNaoAutenticadosPresenter {
     final private TelaPrincipalPresenter telaP;
     final private String OPERACAO = "Autorização de usuário";
 
-    public TelaUsuariosNaoAutenticadosPresenter(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP) {
+    public TelaUsuariosNaoAutenticadosPresenter(ArrayList<Usuario> lista,    TelaPrincipalPresenter telaP) {
 
         this.tela = new UsuariosNaoAutenticadosView();
         this.tela.setVisible(true);
