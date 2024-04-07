@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import models.notificacao.Notificacao;
 import models.usuario.Usuario;
 import presenters.TelaPrincipalPresenter;
-import com.ufes.logadapter.GerenciadorDeArquivoService;
+import com.ufes.logadapter.services.GerenciadorDeArquivoService;
 import views.TelaNotificacoesView;
 
 public class TelaNotificacoesPresenter {
@@ -36,7 +36,7 @@ public class TelaNotificacoesPresenter {
         this.listaSelecionados = new ArrayList<>();
         this.gerenciaArquivo = new GerenciadorDeArquivoService();
         this.telaP = telaP;
-        
+
         mostraTabela();
         configuraBtns();
     }
@@ -65,7 +65,7 @@ public class TelaNotificacoesPresenter {
             for (int j = 0; j < listaSelecionados.size(); j++) {
                 if (lista.get(i).getNome().equals(listaSelecionados.get(j))) {
                     Notificacao notificacao = new Notificacao(
-                            pegaMensagemEnviada(), 
+                            pegaMensagemEnviada(),
                             lista.get(0).getNome());
                     lista.get(i).addNotificacao(notificacao);
                     count++;
@@ -76,12 +76,12 @@ public class TelaNotificacoesPresenter {
         lista.get(0).setNotificacoesEnviadas(count);
         JOptionPane.showMessageDialog(null, "Mensagem Enviada!");
         gerenciaArquivo.processarLog(
-                "", 
-                telaP.getTipoArquivo() ,
-                "Enviar Notificação", 
-                lista.get(0).getNome(), 
-                LocalDate.now(), 
-                LocalTime.now(), 
+                "",
+                telaP.getTipoArquivo(),
+                "Enviar Notificação",
+                lista.get(0).getNome(),
+                LocalDate.now(),
+                LocalTime.now(),
                 true);
         tela.dispose();
     }
@@ -123,10 +123,10 @@ public class TelaNotificacoesPresenter {
         modelo.setRowCount(0);
         for (int i = 1; i < this.lista.size(); i++) {
             Object[] dados = {
-                this.lista.get(i).getNome(),
-                lista.get(i).getData(),
-                lista.get(i).getQtdNotificacoesEnviadas(),
-                lista.get(i).getQtdNotificacoesLidas()
+                    this.lista.get(i).getNome(),
+                    lista.get(i).getData(),
+                    lista.get(i).getQtdNotificacoesEnviadas(),
+                    lista.get(i).getQtdNotificacoesLidas()
             };
             modelo.addRow(dados);
         }

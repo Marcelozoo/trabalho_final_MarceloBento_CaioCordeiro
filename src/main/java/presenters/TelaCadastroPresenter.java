@@ -14,8 +14,7 @@ import java.util.List;
 import services.factoryuser.UsuarioFactory;
 import services.usuario.GerenciaUsuariosService;
 import views.TelaCadastroView;
-import com.ufes.logadapter.GerenciadorDeArquivoService;
-
+import com.ufes.logadapter.services.GerenciadorDeArquivoService;
 
 public class TelaCadastroPresenter {
 
@@ -25,7 +24,6 @@ public class TelaCadastroPresenter {
     final private GerenciadorDeArquivoService gerenciadorArquivo;
     final private String OPERACAO = "Inclusão";
     private String tipoArquivo;
-    
 
     public TelaCadastroPresenter(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP, TelaSistemaPresenter tela) {
         this.telaCadastro = new TelaCadastroView();
@@ -49,25 +47,22 @@ public class TelaCadastroPresenter {
                 try {
                     cadastraUsuario(telaP, tela);
                 } catch (RuntimeException excecao) {
-                    gerenciadorArquivo.processarLog
-                    (
+                    gerenciadorArquivo.processarLog(
                             excecao.getMessage(),
-                            tipoArquivo, 
-                            OPERACAO, 
-                            telaCadastro.getCampoTextoNome().getText(), 
-                            LocalDate.now(), 
-                            LocalTime.now(), 
-                            true
-                    );
-                 
+                            tipoArquivo,
+                            OPERACAO,
+                            telaCadastro.getCampoTextoNome().getText(),
+                            LocalDate.now(),
+                            LocalTime.now(),
+                            true);
+
                     JOptionPane.showMessageDialog(null, excecao.getMessage());
                 } finally {
                     limpaCampos();
                 }
 
             }
-        }
-        );
+        });
     }
 
     private void cadastraUsuario(TelaPrincipalPresenter telaP, TelaSistemaPresenter tela) {
@@ -84,7 +79,8 @@ public class TelaCadastroPresenter {
             lista.add(user.getUsuario(nome, senha, true, true));
             telaP.remove(telaCadastro);
             sucessoAoCadastrar();
-            this.gerenciadorArquivo.processarLog("",tipoArquivo,OPERACAO, nome, LocalDate.now(), LocalTime.now(), true);
+            this.gerenciadorArquivo.processarLog("", tipoArquivo, OPERACAO, nome, LocalDate.now(), LocalTime.now(),
+                    true);
             tela.inicializar();
         } else {
             GerenciaUsuariosService gerenciaNomes = new GerenciaUsuariosService();
@@ -93,7 +89,8 @@ public class TelaCadastroPresenter {
                 lista.add(user.getUsuario(nome, senha, false, false));
                 telaP.remove(telaCadastro);
                 sucessoAoCadastrar();
-                this.gerenciadorArquivo.processarLog("",tipoArquivo,OPERACAO, nome, LocalDate.now(), LocalTime.now(), false);
+                this.gerenciadorArquivo.processarLog("", tipoArquivo, OPERACAO, nome, LocalDate.now(), LocalTime.now(),
+                        false);
                 tela.inicializar();
             } else {
                 throw new RuntimeException("Nome de usuário já existe!");
@@ -139,5 +136,5 @@ public class TelaCadastroPresenter {
             throw new RuntimeException("Preencha os campos vazios!");
         }
     }
-     
+
 }

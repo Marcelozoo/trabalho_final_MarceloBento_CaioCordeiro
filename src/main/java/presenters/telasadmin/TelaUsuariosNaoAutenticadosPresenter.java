@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import models.usuario.Usuario;
 import presenters.TelaPrincipalPresenter;
-import com.ufes.logadapter.GerenciadorDeArquivoService;
+import com.ufes.logadapter.services.GerenciadorDeArquivoService;
 import views.UsuariosNaoAutenticadosView;
 
 public class TelaUsuariosNaoAutenticadosPresenter {
@@ -22,7 +22,7 @@ public class TelaUsuariosNaoAutenticadosPresenter {
     final private TelaPrincipalPresenter telaP;
     final private String OPERACAO = "Autorização de usuário";
 
-    public TelaUsuariosNaoAutenticadosPresenter(ArrayList<Usuario> lista,    TelaPrincipalPresenter telaP) {
+    public TelaUsuariosNaoAutenticadosPresenter(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP) {
 
         this.tela = new UsuariosNaoAutenticadosView();
         this.tela.setVisible(true);
@@ -59,17 +59,17 @@ public class TelaUsuariosNaoAutenticadosPresenter {
             achaUsuarioSelecionado(valoresLinha[0].toString());
         }
     }
-    
-    private void achaUsuarioSelecionado(String nome){
-        for(int i = 0;i<listaUser.size();i++){
-            if(listaUser.get(i).getNome().equals(nome)){
+
+    private void achaUsuarioSelecionado(String nome) {
+        for (int i = 0; i < listaUser.size(); i++) {
+            if (listaUser.get(i).getNome().equals(nome)) {
                 listaUser.get(i).setAutenticacao(true);
                 this.gerenciadorArquivo.processarLog(
                         "",
                         telaP.getTipoArquivo(),
                         OPERACAO,
-                        listaUser.get(i).getNome(), 
-                        LocalDate.now(), 
+                        listaUser.get(i).getNome(),
+                        LocalDate.now(),
                         LocalTime.now(),
                         true);
                 JOptionPane.showMessageDialog(null, "Usuário autenticado com sucesso!");
@@ -84,7 +84,7 @@ public class TelaUsuariosNaoAutenticadosPresenter {
 
         for (int i = 0; i < lista.size(); i++) {
             if (!lista.get(i).getIsAutenticado()) {
-                Object[] dados = {lista.get(i).getNome()};
+                Object[] dados = { lista.get(i).getNome() };
                 tabela.addRow(dados);
             }
         }

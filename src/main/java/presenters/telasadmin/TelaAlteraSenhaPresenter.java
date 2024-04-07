@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import models.usuario.Usuario;
 import presenters.TelaPrincipalPresenter;
-import com.ufes.logadapter.GerenciadorDeArquivoService;
+import com.ufes.logadapter.services.GerenciadorDeArquivoService;
 import views.TelaAlteraSenhaView;
 
 public class TelaAlteraSenhaPresenter {
