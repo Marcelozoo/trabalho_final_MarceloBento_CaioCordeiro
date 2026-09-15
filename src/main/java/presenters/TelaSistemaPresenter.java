@@ -1,89 +1,63 @@
 package presenters;
 
-import presenters.state.telasistemastate.StatePresenter;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
 import models.usuario.Usuario;
-import presenters.state.telasistemastate.InicializaState;
-import services.usuario.GerenciaLoginService;
-import views.TelaSistemaView;
-import javax.swing.JTextField;
-import services.factoryuser.tela.TelaUsuarioFactory;
+import views.TelaPrincipalView;
 
-public class TelaSistemaPresenter {
+public class TelaPrincipalPresenter {
 
-    final private TelaSistemaView telaSistema;
-    private StatePresenter estado;
+    private final TelaPrincipalView telaPrincipal;
+    final private JDesktopPane painelDesktop;
+    private ArrayList<Usuario> listaUser;
+    private TelaConfiguraLogPresenter telaConfig;
 
-    public TelaSistemaPresenter(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP) {
-
-        this.telaSistema = new TelaSistemaView();
-        estado = new InicializaState(this, lista, telaP);
-
-        configuraBtnsTela(lista, telaP);
+    public TelaPrincipalPresenter(ArrayList<Usuario> lista) {
+        this.telaPrincipal = new TelaPrincipalView();
+        this.telaPrincipal.setVisible(true);
+        this.telaPrincipal.setLocationRelativeTo(null);
+        this.telaPrincipal.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        painelDesktop = this.telaPrincipal.getDesktop();
+        this.listaUser = lista;
+        
+        configBtnsTela();
+        new TelaSistemaPresenter(listaUser, this);
     }
 
-    private void configuraBtnsTela(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP) {
+    public void atualiza(JInternalFrame tela) {
+        this.painelDesktop.revalidate();
+        this.painelDesktop.repaint();
+        this.painelDesktop.add(tela);
+    }
 
-        telaSistema.getBtnCadastrar().addActionListener(new ActionListener() {
+    public void remove(JInternalFrame tela) {
+        this.painelDesktop.revalidate();
+        this.painelDesktop.repaint();
+        this.painelDesktop.remove(tela);
+    }
+    
+    private void configBtnsTela(){
+        telaPrincipal.getBtnConfigura().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cadastrar();
-            }
-        });
-
-        telaSistema.getBtnLogin().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    gerenciarLogin(lista, telaP);
-                } catch (RuntimeException excecao) {
-                    JOptionPane.showMessageDialog(null, excecao.getMessage());
-                }
+                telaConfig = new TelaConfiguraLogPresenter();
+             
             }
         });
     }
-
-    private void gerenciarLogin(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP) {
-        String nome = telaSistema.getCampoTextoNome().getText();
-        String senha = telaSistema.getCampoTextoSenha().getText();
-        GerenciaLoginService gerenciaLogin = new GerenciaLoginService();
-
-        verificaCamposVazios(telaSistema.getCampoTextoNome(), telaSistema.getCampoTextoSenha());
-
-        Usuario user = gerenciaLogin.verificaLogin(nome, senha, lista);
-        limpaCampos(telaSistema.getCampoTextoNome(), telaSistema.getCampoTextoSenha());
-        TelaUsuarioFactory tela = TelaUsuarioFactory.getTelaUsuarioFactory(user.getIsAdmin(), user);
-        telaP.atualiza(tela.getTelaUsuario(user, lista, telaP));
-    }
-
-    private void verificaCamposVazios(JTextField campoNome, JTextField campoSenha) {
-        if (campoNome.getText().isEmpty() || campoSenha.getText().isEmpty()) {
-            throw new RuntimeException("Preencha os campos vazios!");
+    
+    public String getTipoArquivo(){
+        // json é o default
+        if(this.telaConfig == null){
+            return "Json";
         }
+        return telaConfig.getTipoArquivo();
+        
     }
-
-    public JInternalFrame getTelaSistemaView() {
-        return this.telaSistema;
-    }
-
-    public void inicializar() {
-        estado.inicializar();
-    }
-
-    public void cadastrar() {
-        estado.cadastrar();
-    }
-
-    public void setEstado(StatePresenter novoEstado) {
-        estado = novoEstado;
-    }
-
-    private void limpaCampos(JTextField campoNome, JTextField campoSenha) {
-        campoNome.setText("");
-        campoSenha.setText("");
-    }
+    
 }
