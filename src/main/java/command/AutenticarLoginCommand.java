@@ -18,9 +18,8 @@ public class AutenticarLoginCommand implements Command<Usuario> {
     }
 
     @Override
-    public ResultadoOperacao<Usuario> executar() {
+    public void executar() {
         resultado = usuarioService.autenticarLogin(nome, senha);
-        return resultado;
     }
 
     @Override

@@ -4,6 +4,6 @@ import models.ResultadoOperacao;
 
 public interface Command<T> {
 
-    ResultadoOperacao<T> executar();
+    void executar();
     ResultadoOperacao<T> getResultado();
 }

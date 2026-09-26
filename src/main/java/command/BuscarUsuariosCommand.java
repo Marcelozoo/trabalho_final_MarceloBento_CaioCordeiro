@@ -6,23 +6,25 @@ import services.UsuarioService;
 
 import java.util.List;
 
-public class ListarCommand implements Command<List<Usuario>> {
+public class BuscarUsuariosCommand implements Command<List<Usuario>> {
 
-    private ResultadoOperacao<List<Usuario>> resultado;
+    private final String nome;
     private final UsuarioService usuarioService;
+    private ResultadoOperacao<List<Usuario>> resultado;
 
-    public ListarCommand(UsuarioService usuarioService) {
+    public BuscarUsuariosCommand(String nome, UsuarioService usuarioService) {
+        this.nome = nome;
         this.usuarioService = usuarioService;
     }
 
     @Override
     public void executar() {
-        resultado = new ResultadoOperacao<>();
-        usuarioService.listar(resultado);
+        resultado = usuarioService.buscar(nome);
+
     }
 
+    @Override
     public ResultadoOperacao<List<Usuario>> getResultado() {
         return resultado;
     }
-
 }
