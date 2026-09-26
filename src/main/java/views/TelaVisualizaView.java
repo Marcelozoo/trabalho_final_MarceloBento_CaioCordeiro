@@ -47,6 +47,8 @@ public class TelaVisualizaView extends javax.swing.JFrame {
         dadoDataCadastroLabel = new javax.swing.JLabel();
         dadoNotificacoesLidasLabel = new javax.swing.JLabel();
         dadoNotificacoesNaoLidaLabel = new javax.swing.JLabel();
+        dadoEmailLabel = new javax.swing.JLabel();
+        emailLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Visualização");
@@ -76,51 +78,64 @@ public class TelaVisualizaView extends javax.swing.JFrame {
         notificacoesNaoLidasLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         notificacoesNaoLidasLabel.setText("Notificações Não Lidas:");
 
+        dadoNomeLabel.setText("fdafad");
         dadoNomeLabel.setEnabled(false);
 
+        dadoDataCadastroLabel.setText("dfafadf");
         dadoDataCadastroLabel.setEnabled(false);
 
+        dadoNotificacoesLidasLabel.setText("adfaf");
         dadoNotificacoesLidasLabel.setEnabled(false);
 
+        dadoNotificacoesNaoLidaLabel.setText("afda");
+        dadoNotificacoesNaoLidaLabel.setToolTipText("");
         dadoNotificacoesNaoLidaLabel.setEnabled(false);
+
+        dadoEmailLabel.setText("adfaf");
+        dadoEmailLabel.setEnabled(false);
+
+        emailLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        emailLabel.setText("Email:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(titulo)
+                .addGap(190, 190, 190))
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExcluir)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEditar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnAutenticar))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nomeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(dadoNomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(notificacoesNaoLidasLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(dadoNotificacoesNaoLidaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(dataCadastroLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(dadoDataCadastroLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(dadoDataCadastroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(notificacoesLidasLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(dadoNotificacoesLidasLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(38, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(titulo)
-                        .addGap(190, 190, 190))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnExcluir)
                         .addGap(18, 18, 18)
-                        .addComponent(btnEditar)
+                        .addComponent(dadoNotificacoesLidasLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(emailLabel)
                         .addGap(18, 18, 18)
-                        .addComponent(btnAutenticar)
-                        .addGap(133, 133, 133))))
+                        .addComponent(dadoEmailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,15 +146,19 @@ public class TelaVisualizaView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nomeLabel)
                     .addComponent(dadoNomeLabel))
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailLabel)
+                    .addComponent(dadoEmailLabel))
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dataCadastroLabel)
                     .addComponent(dadoDataCadastroLabel))
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(notificacoesLidasLabel)
                     .addComponent(dadoNotificacoesLidasLabel))
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(notificacoesNaoLidasLabel)
                     .addComponent(dadoNotificacoesNaoLidaLabel))
@@ -148,7 +167,7 @@ public class TelaVisualizaView extends javax.swing.JFrame {
                     .addComponent(btnExcluir)
                     .addComponent(btnEditar)
                     .addComponent(btnAutenticar))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -198,6 +217,9 @@ public class TelaVisualizaView extends javax.swing.JFrame {
     public void setTextoDadoDataCadastroLabel(String dadoDataCadastroLabel) {
         this.dadoDataCadastroLabel.setText(dadoDataCadastroLabel); 
     }
+    public void setTextoDadoEmailLabel(String dadoEmailLabel){
+        this.dadoEmailLabel.setText(dadoEmailLabel);
+    }
 
     public void setTextoDadoNomeLabel(String dadoNomeLabel) {
         this.dadoNomeLabel.setText(dadoNomeLabel);
@@ -243,10 +265,12 @@ public class TelaVisualizaView extends javax.swing.JFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JLabel dadoDataCadastroLabel;
+    private javax.swing.JLabel dadoEmailLabel;
     private javax.swing.JLabel dadoNomeLabel;
     private javax.swing.JLabel dadoNotificacoesLidasLabel;
     private javax.swing.JLabel dadoNotificacoesNaoLidaLabel;
     private javax.swing.JLabel dataCadastroLabel;
+    private javax.swing.JLabel emailLabel;
     private javax.swing.JLabel nomeLabel;
     private javax.swing.JLabel notificacoesLidasLabel;
     private javax.swing.JLabel notificacoesNaoLidasLabel;

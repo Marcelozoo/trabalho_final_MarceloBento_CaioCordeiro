@@ -49,7 +49,6 @@ public class TelaAdminView extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaUsuarios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        btnListarTodos = new javax.swing.JButton();
         btnEnviarNotificacoes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -63,12 +62,10 @@ public class TelaAdminView extends javax.swing.JFrame {
         btnNotificacoes.setAlignmentX(20.0F);
         btnNotificacoes.setAlignmentY(2.0F);
         btnNotificacoes.setName(""); // NOI18N
-        btnNotificacoes.addActionListener(this::btnNotificacoesActionPerformed);
 
         btnNovo.setText("Novo");
 
         btnVisualizar.setText("Visualizar");
-        btnVisualizar.addActionListener(this::btnVisualizarActionPerformed);
 
         btnSair.setText("Sair");
 
@@ -100,9 +97,6 @@ public class TelaAdminView extends javax.swing.JFrame {
 
         jLabel1.setText("Seleciona uma linha da tabela para executar o comando: Visualizar no botão abaixo.");
 
-        btnListarTodos.setText("Listar Todos");
-        btnListarTodos.addActionListener(this::btnListarTodosActionPerformed);
-
         btnEnviarNotificacoes.setText("Enviar Notificações");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -130,15 +124,13 @@ public class TelaAdminView extends javax.swing.JFrame {
                                 .addComponent(jLabel1))
                             .addGap(18, 18, 18)
                             .addComponent(btnNotificacoes, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel9)
                             .addGap(18, 18, 18)
                             .addComponent(nomeUsuarioText)
                             .addGap(18, 18, 18)
-                            .addComponent(btnBuscar)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnListarTodos))))
+                            .addComponent(btnBuscar))
+                        .addComponent(jScrollPane2)))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -148,8 +140,7 @@ public class TelaAdminView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(nomeUsuarioText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar)
-                    .addComponent(btnListarTodos))
+                    .addComponent(btnBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -170,18 +161,6 @@ public class TelaAdminView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnVisualizarActionPerformed
-
-    private void btnNotificacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificacoesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnNotificacoesActionPerformed
-
-    private void btnListarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarTodosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnListarTodosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -220,14 +199,13 @@ public class TelaAdminView extends javax.swing.JFrame {
         return btnEnviarNotificacoes;
     }
 
-    public JTextField getNomeUsuarioText() {
-        return nomeUsuarioText;
+    public String getNomeUsuarioText() {
+        return nomeUsuarioText.getText();
     }
 
-    public JButton getBtnListarTodos() {
-        return btnListarTodos;
+    public void setQtdNotificacoesNLidas(int qtd){
+        btnNotificacoes.setText(Integer.toString(qtd) + "Notificaações nãao lidas");
     }
-
     public JLabel getTipoUsuarioLabel() {
         return tipoUsuarioLabel;
     }
@@ -251,6 +229,20 @@ public class TelaAdminView extends javax.swing.JFrame {
     public JButton getBtnVisualizar() {
         return btnVisualizar;
     }
+    
+    public void mudarNomeLabel(String nome){
+        nomeUsuarioLabel.setText(nome);
+    }
+    
+    public void mudarTipoLabel(String tipo){
+        tipoUsuarioLabel.setText(tipo);
+    }
+    
+    public int obterLinhaSelecionadaNaTabela(){
+        return this.tabelaUsuarios.getSelectedRow();
+    }
+    
+    
 
     public void mostrarMensagem(String mensagem){
         JOptionPane.showMessageDialog(this, mensagem);
@@ -259,7 +251,6 @@ public class TelaAdminView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEnviarNotificacoes;
-    private javax.swing.JButton btnListarTodos;
     private javax.swing.JButton btnNotificacoes;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnSair;

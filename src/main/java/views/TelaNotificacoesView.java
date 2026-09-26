@@ -5,7 +5,9 @@
 package views;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -45,7 +47,7 @@ public class TelaNotificacoesView extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaNotificacoesNaoLidas = new javax.swing.JTable();
         btnLer = new javax.swing.JButton();
-        btnSair = new javax.swing.JButton();
+        btnSairNotificacoesNLidas = new javax.swing.JButton();
         painelNotificacoesLidas = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaNotificacoesNaoLidas1 = new javax.swing.JTable();
@@ -58,18 +60,15 @@ public class TelaNotificacoesView extends javax.swing.JFrame {
         painelNotificacoesNaoLidas.setToolTipText("");
 
         tabelaNotificacoesNaoLidas.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null},
-                        {null, null},
-                        {null, null},
-                        {null, null}
-                },
-                new String [] {
-                        "Remetente", "Mensagem"
-                }
+            new Object [][] {
+
+            },
+            new String [] {
+                "Remetente", "Mensagem"
+            }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -80,33 +79,33 @@ public class TelaNotificacoesView extends javax.swing.JFrame {
 
         btnLer.setText("Ler");
 
-        btnSair.setText("Sair");
+        btnSairNotificacoesNLidas.setText("Sair");
 
         javax.swing.GroupLayout painelNotificacoesNaoLidasLayout = new javax.swing.GroupLayout(painelNotificacoesNaoLidas);
         painelNotificacoesNaoLidas.setLayout(painelNotificacoesNaoLidasLayout);
         painelNotificacoesNaoLidasLayout.setHorizontalGroup(
-                painelNotificacoesNaoLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelNotificacoesNaoLidasLayout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(25, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelNotificacoesNaoLidasLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSair)
-                                .addGap(146, 146, 146)
-                                .addComponent(btnLer)
-                                .addGap(219, 219, 219))
+            painelNotificacoesNaoLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelNotificacoesNaoLidasLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(25, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelNotificacoesNaoLidasLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSairNotificacoesNLidas)
+                .addGap(146, 146, 146)
+                .addComponent(btnLer)
+                .addGap(219, 219, 219))
         );
         painelNotificacoesNaoLidasLayout.setVerticalGroup(
-                painelNotificacoesNaoLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelNotificacoesNaoLidasLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(painelNotificacoesNaoLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnLer)
-                                        .addComponent(btnSair))
-                                .addContainerGap(14, Short.MAX_VALUE))
+            painelNotificacoesNaoLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelNotificacoesNaoLidasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(painelNotificacoesNaoLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLer)
+                    .addComponent(btnSairNotificacoesNLidas))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         abasPaineis.addTab("Notificações Não Lidas", painelNotificacoesNaoLidas);
@@ -114,18 +113,18 @@ public class TelaNotificacoesView extends javax.swing.JFrame {
         painelNotificacoesLidas.setToolTipText("");
 
         tabelaNotificacoesNaoLidas1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null},
-                        {null, null},
-                        {null, null},
-                        {null, null}
-                },
-                new String [] {
-                        "Remetente", "Mensagem"
-                }
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Remetente", "Mensagem"
+            }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -139,25 +138,25 @@ public class TelaNotificacoesView extends javax.swing.JFrame {
         javax.swing.GroupLayout painelNotificacoesLidasLayout = new javax.swing.GroupLayout(painelNotificacoesLidas);
         painelNotificacoesLidas.setLayout(painelNotificacoesLidasLayout);
         painelNotificacoesLidasLayout.setHorizontalGroup(
-                painelNotificacoesLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
-                                .addGroup(painelNotificacoesLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
-                                                .addGap(14, 14, 14)
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
-                                                .addGap(312, 312, 312)
-                                                .addComponent(btnSairNotificacoesLidas)))
-                                .addContainerGap(25, Short.MAX_VALUE))
+            painelNotificacoesLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
+                .addGroup(painelNotificacoesLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
+                        .addGap(312, 312, 312)
+                        .addComponent(btnSairNotificacoesLidas)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         painelNotificacoesLidasLayout.setVerticalGroup(
-                painelNotificacoesLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnSairNotificacoesLidas)
-                                .addContainerGap(14, Short.MAX_VALUE))
+            painelNotificacoesLidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelNotificacoesLidasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSairNotificacoesLidas)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         abasPaineis.addTab("Notificacoes Lidas", painelNotificacoesLidas);
@@ -165,12 +164,12 @@ public class TelaNotificacoesView extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(abasPaineis)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(abasPaineis)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(abasPaineis)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(abasPaineis)
         );
 
         abasPaineis.getAccessibleContext().setAccessibleName("NotificacoesLidas");
@@ -211,38 +210,53 @@ public class TelaNotificacoesView extends javax.swing.JFrame {
         return btnLer;
     }
 
-    public JButton getBtnSair() {
-        return btnSair;
+    public JButton getBtnSairNotificacoesNLidas() {
+        return btnSairNotificacoesNLidas;
     }
 
     public JButton getBtnSairNotificacoesLidas() {
         return btnSairNotificacoesLidas;
     }
 
-    public void inserirDadoNaTabelaNotificacoesNaoLida(String remetente, String mensagem){
-        
+    public void inserirDadoNaTabelaNotificacoesNaoLida(String remetente, String mensagem) {
         modeloTabelaNotificacoesNaoLidas.addRow(new Object[]{
                 remetente, mensagem
         });
-    
     }
 
-    public void limparTabelaNotificacoesNaoLidas(){
+    public void inserirDadoNaTabelaNotificacoesLida(String remetente, String mensagem) {
+        DefaultTableModel modelo = (DefaultTableModel) tabelaNotificacoesNaoLidas1.getModel();
+        modelo.addRow(new Object[]{remetente, mensagem});
+    }
+
+    public void limparTabelaNotificacoesNaoLidas() {
         modeloTabelaNotificacoesNaoLidas.setRowCount(0);
+    }
 
+    public void limparTabelaNotificacoesLidas() {
+        DefaultTableModel modelo = (DefaultTableModel) tabelaNotificacoesNaoLidas1.getModel();
+        modelo.setRowCount(0);
+    }
+
+    public JTable getTabelaNotificacoesNaoLidas() {
+        return tabelaNotificacoesNaoLidas;
+    }
+
+    public void mostrarMensagem(String mensagem) {
+        JOptionPane.showMessageDialog(this, mensagem);
     }
 
 
-// Variables declaration - do not modify//GEN-BEGIN:variables
-private javax.swing.JTabbedPane abasPaineis;
-private javax.swing.JButton btnLer;
-private javax.swing.JButton btnSair;
-private javax.swing.JButton btnSairNotificacoesLidas;
-private javax.swing.JScrollPane jScrollPane1;
-private javax.swing.JScrollPane jScrollPane2;
-private javax.swing.JPanel painelNotificacoesLidas;
-private javax.swing.JPanel painelNotificacoesNaoLidas;
-private javax.swing.JTable tabelaNotificacoesNaoLidas;
-private javax.swing.JTable tabelaNotificacoesNaoLidas1;
-// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane abasPaineis;
+    private javax.swing.JButton btnLer;
+    private javax.swing.JButton btnSairNotificacoesLidas;
+    private javax.swing.JButton btnSairNotificacoesNLidas;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel painelNotificacoesLidas;
+    private javax.swing.JPanel painelNotificacoesNaoLidas;
+    private javax.swing.JTable tabelaNotificacoesNaoLidas;
+    private javax.swing.JTable tabelaNotificacoesNaoLidas1;
+    // End of variables declaration//GEN-END:variables
 }

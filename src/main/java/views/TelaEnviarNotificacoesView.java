@@ -79,7 +79,7 @@ public class TelaEnviarNotificacoesView extends javax.swing.JFrame {
                         .addGap(72, 72, 72)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
                             .addComponent(jScrollPane3))))
                 .addGap(0, 43, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()

@@ -40,6 +40,12 @@ public class TelaCadastroView extends javax.swing.JFrame {
         senhaNovamenteLabel = new javax.swing.JLabel();
         senhaText = new javax.swing.JPasswordField();
         senhaNovamenteText = new javax.swing.JPasswordField();
+        emailLabel = new javax.swing.JLabel();
+        emailText = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        autenticadoCheckBox = new javax.swing.JCheckBox();
+        adminCheckBox = new javax.swing.JCheckBox();
+        checkBoxLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("TelaCadastro");
@@ -58,49 +64,85 @@ public class TelaCadastroView extends javax.swing.JFrame {
 
         senhaNovamenteLabel.setText("Senha Novamente:");
 
+        emailLabel.setText("Email:");
+
+        emailText.setToolTipText("");
+        emailText.addActionListener(this::emailTextActionPerformed);
+
+        jLabel1.setFont(new java.awt.Font("Leelawadee UI", 1, 14)); // NOI18N
+        jLabel1.setText("CADASTRO");
+
+        autenticadoCheckBox.setText("Autenticado");
+
+        adminCheckBox.setText("Admin");
+
+        checkBoxLabel.setText("Marque os campos abaixo para decidir se o usuário deve ser ou estar:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCadastrar))
+                        .addGap(224, 224, 224)
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(usuarioLabel)
-                            .addComponent(senhaLabel)
-                            .addComponent(senhaNovamenteLabel))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(usuarioText, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
-                            .addComponent(senhaText)
-                            .addComponent(senhaNovamenteText))))
-                .addContainerGap(58, Short.MAX_VALUE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(senhaLabel)
+                                .addComponent(usuarioLabel)
+                                .addComponent(emailLabel)
+                                .addComponent(senhaNovamenteLabel)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnCancelar)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
+                                    .addComponent(btnCadastrar))
+                                .addComponent(usuarioText)
+                                .addComponent(senhaNovamenteText)
+                                .addComponent(emailText)
+                                .addComponent(senhaText))
+                            .addComponent(checkBoxLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(124, 124, 124)
+                                .addComponent(adminCheckBox)
+                                .addGap(26, 26, 26)
+                                .addComponent(autenticadoCheckBox)))))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(11, 11, 11)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(usuarioLabel)
+                .addGap(10, 10, 10)
+                .addComponent(usuarioText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(emailLabel)
+                .addGap(10, 10, 10)
+                .addComponent(emailText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(senhaLabel)
+                .addGap(10, 10, 10)
+                .addComponent(senhaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(senhaNovamenteLabel)
+                .addGap(10, 10, 10)
+                .addComponent(senhaNovamenteText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(checkBoxLabel)
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usuarioLabel)
-                    .addComponent(usuarioText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(senhaLabel)
-                    .addComponent(senhaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(senhaNovamenteLabel)
-                    .addComponent(senhaNovamenteText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(43, 43, 43)
+                    .addComponent(autenticadoCheckBox)
+                    .addComponent(adminCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
                     .addComponent(btnCadastrar))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addGap(34, 34, 34))
         );
 
         pack();
@@ -113,6 +155,10 @@ public class TelaCadastroView extends javax.swing.JFrame {
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCadastrarActionPerformed
+
+    private void emailTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailTextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,32 +202,61 @@ public class TelaCadastroView extends javax.swing.JFrame {
         return senhaLabel;
     }
 
-    public JPasswordField getSenhaNovamenteText() {
-        return senhaNovamenteText;
+    public char[] getSenhaNovamenteText() {
+        return senhaNovamenteText.getPassword();
     }
 
-    public JPasswordField getSenhaText() {
-        return senhaText;
+    public char[] getSenhaText() {
+        return senhaText.getPassword();
+    }
+    
+
+    public String getUsuarioText() {
+        return usuarioText.getText();
     }
 
-    public JTextField getUsuarioText() {
-        return usuarioText;
+    public String getEmailText() {
+        return emailText.getText();
     }
 
 
     public void limparCampos(){
-        senhaNovamenteText.setText("");
-        senhaText.setText("");
         usuarioText.setText("");
+        emailText.setText("");
+        senhaText.setText("");
+        senhaNovamenteText.setText("");
+        adminCheckBox.setSelected(false);
+        autenticadoCheckBox.setSelected(false);
     }
 
     public void mostrarMensagem(String mensagem){
         JOptionPane.showMessageDialog(this, mensagem);
     }
     
+    public void desabilitarBtnAdminCheckBox(){
+        adminCheckBox.setEnabled(false);
+    }
+    public void desabilitarBtnAutenticadoCheckBox(){
+        autenticadoCheckBox.setEnabled(false);
+    }
+
+    public JCheckBox getAdminCheckBox() {
+        return adminCheckBox;
+    }
+
+    public JCheckBox getAutenticadoCheckBox() {
+        return autenticadoCheckBox;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox adminCheckBox;
+    private javax.swing.JCheckBox autenticadoCheckBox;
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JLabel checkBoxLabel;
+    private javax.swing.JLabel emailLabel;
+    private javax.swing.JTextField emailText;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel senhaLabel;
     private javax.swing.JLabel senhaNovamenteLabel;
     private javax.swing.JPasswordField senhaNovamenteText;

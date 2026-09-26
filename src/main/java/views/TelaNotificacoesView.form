@@ -65,7 +65,7 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnSair" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnSairNotificacoesNLidas" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
                       <Component id="btnLer" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="219" max="-2" attributes="0"/>
@@ -80,7 +80,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnLer" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnSair" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSairNotificacoesNLidas" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="14" max="32767" attributes="0"/>
                   </Group>
@@ -98,7 +98,7 @@
                 <Component class="javax.swing.JTable" name="tabelaNotificacoesNaoLidas">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="2" rowCount="4">
+                      <Table columnCount="2" rowCount="0">
                         <Column editable="false" title="Remetente" type="java.lang.Object"/>
                         <Column editable="false" title="Mensagem" type="java.lang.Object"/>
                       </Table>
@@ -112,7 +112,7 @@
                 <Property name="text" type="java.lang.String" value="Ler"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnSair">
+            <Component class="javax.swing.JButton" name="btnSairNotificacoesNLidas">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Sair"/>
               </Properties>
