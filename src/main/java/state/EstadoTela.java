@@ -7,16 +7,12 @@ public class EstadoTela {
     private Estado estado;
 
     public EstadoTela() {
-        this.estado = new LoginState(this);
+        this.estado = null;
     }
 
+    public void logar(){this.estado.logar();};
 
-    public void iniciar(){
-        this.estado.iniciar();
-    }
-    public void login(){
-        this.estado.login();
-    }
+
     public void cadastrar(Invoke invoke){
         this.estado.cadastrar(invoke);
     }
@@ -43,10 +39,7 @@ public class EstadoTela {
     public void excluir(Invoke invoke){
         this.estado.excluir(invoke);
     }
-    public void buscar(Invoke invoke){
-        this.estado.buscar(invoke);
-    }
-
+    public void buscar(Invoke invoke){this.estado.buscar(invoke);}
     public void listar(Invoke invoke){
         this.estado.listar(invoke);
     }

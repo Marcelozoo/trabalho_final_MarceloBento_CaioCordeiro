@@ -2,27 +2,28 @@ package state;
 
 import command.Invoke;
 
-public class LogadoState extends Estado {
+public class BuscandoUsuariosState extends Estado {
 
-    public LogadoState(EstadoTela estadoTela) {
+    public BuscandoUsuariosState(EstadoTela estadoTela) {
         super(estadoTela);
     }
 
     @Override
     public void buscar(Invoke invoke) {
+        invoke.executar();
         estadoTela.setEstado(new BuscandoUsuariosState(estadoTela));
-        estadoTela.buscar(invoke);
     }
 
     @Override
-    public void listar(Invoke invoke) {
-        estadoTela.setEstado(new BuscandoUsuariosState(estadoTela));
+    public void listar(Invoke invoke){
         invoke.executar();
-
+        estadoTela.setEstado(new BuscandoUsuariosState(estadoTela));
     }
+
+
 
     @Override
     public String getEstado() {
-        return "Logado";
+        return "Buscando usuários";
     }
 }
