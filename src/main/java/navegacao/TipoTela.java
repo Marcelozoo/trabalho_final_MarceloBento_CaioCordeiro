@@ -20,6 +20,7 @@ public final class TipoTela {
 
     public static final TipoTela TELA_EDITAR =
             new TipoTela("TELA_EDITAR");
+    public static final TipoTela TELA_USUARIO_COMUM = new TipoTela("TELA_USUARIO_COMUM");
 
     private final String nome;
 
@@ -29,11 +30,11 @@ public final class TipoTela {
     private TipoTela(String nome) {
         this.nome = nome;
     }
-    public static TipoTela criarTelaVisualizacaoUsuario(String idUsuario) {
+    public static TipoTela criarTelaVisualizacaoUsuario(int idUsuario) {
         return new TipoTela("TELA_VISUALIZACAO_USUARIO_" + idUsuario);
     }
 
-    public static TipoTela criarTelaEdicao(String idUsuario) {
+    public static TipoTela criarTelaEdicao(int idUsuario) {
         return new TipoTela("TELA_EDITAR" + idUsuario);
     }
 }
