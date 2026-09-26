@@ -15,12 +15,17 @@ public class Main {
 
         UsuarioService usuarioService = new UsuarioService(usuariosDAO);
         EnviarNotificacaoService enviarNotificacaoService  = new EnviarNotificacaoService(usuariosDAO,notificacaoDAO);
+        NotificacaoService notificacaoService = new NotificacaoService(notificacaoDAO, usuariosDAO);
 
 //        for (int i = 22; i < 24; i++){
 //            usuariosDAO.excluir(i);
 //        }
 
-        ProvedorService provedor = new ProvedorService(usuarioService, enviarNotificacaoService);
+        ProvedorService provedor = new ProvedorService(
+                usuarioService,
+                enviarNotificacaoService,
+                notificacaoService
+        );
 
         GerenciadorTelasService gerenciadorTelas = new GerenciadorTelasService(provedor);
 
