@@ -66,6 +66,48 @@ public class NotificacaoDAOSQLite implements NotificacaoDAO{
     }
 
     @Override
+    public List<Notificacao> listarNotificacoesPorDestinatario(int destinatarioId) {
+        String sql = "SELECT * FROM notificacoes WHERE destinatario_id = ? ORDER BY id DESC";
+        List<Notificacao> notificacoes = new ArrayList<>();
+
+        try (Connection conexao = ConexaoFactory.criarConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, destinatarioId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Notificacao notificacao = new Notificacao();
+                    notificacao.setId(rs.getInt("id"));
+                    notificacao.setDestinatarioId(rs.getInt("destinatario_id"));
+                    notificacao.setRemetenteId(rs.getInt("remetente_id"));
+                    notificacao.setCriadaEm(rs.getString("criada_em"));
+                    notificacao.setFoiLida(rs.getBoolean("foi_lida"));
+                    notificacao.setConteudo(rs.getString("conteudo"));
+                    notificacoes.add(notificacao);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar notificações do usuário");
+        }
+
+        return notificacoes;
+    }
+
+    @Override
+    public void marcarComoLida(int notificacaoId, int destinatarioId) {
+        String sql = "UPDATE notificacoes SET foi_lida = 1 WHERE id = ? AND destinatario_id = ?";
+
+        try (Connection conexao = ConexaoFactory.criarConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, notificacaoId);
+            stmt.setInt(2, destinatarioId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar notificação");
+        }
+    }
+
+    @Override
     public void lerNotificacao(Notificacao notificacao) {
         String sql = "UPDATE notificacoes SET foi_lida = ? WHERE id = ?";
 

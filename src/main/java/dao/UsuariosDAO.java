@@ -4,17 +4,14 @@ import models.Usuario;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public interface UsuariosDAO {
 
     void inserir(Usuario usuario);
-    void atualizarPreferencia(Usuario usuario);
-    void atualizarSenha(String nome, String senha);
-    void atualizarNome(String nome);
-    void excluir(String nome);
-    void autorizar(String nome);
+    void atualizar(Usuario usuario);
+    void excluir(int id);
     Usuario buscarPorId(int id);
-    Usuario buscarPorNome(String nome);
+    Usuario buscarPorEmail(String email);
+    List<Usuario> buscarPorNome(String nome);
     List<Usuario> listarTodos();
 
 

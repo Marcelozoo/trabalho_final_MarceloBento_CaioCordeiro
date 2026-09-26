@@ -1,8 +1,9 @@
 package dao;
 
+import excecoes.OperacaoUsuarioDAOException;
+import excecoes.enums.MensagensErroBanco;
 import factory.ConexaoFactory;
 import models.Usuario;
-import org.jboss.resteasy.spi.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,113 +11,82 @@ import java.sql.*;
 
 public class UsuarioDAOSQLite implements UsuariosDAO {
 
-    private Connection conexao2;
-
-    public  UsuarioDAOSQLite(){
-
-    }
 
     @Override
     public void inserir(Usuario usuario) {
-        String sql = "INSERT INTO Usuarios (nome, senha_hash, is_admin, foi_autenticado,preferencia_log) VALUES (?, ?, ?, ?, ?)" ;
+        String sql = "INSERT INTO Usuarios (nome, email, senha_hash, is_admin, foi_autenticado,preferencia_log) VALUES (?, ?, ?, ?, ?, ?)" ;
 
         try(Connection conexao = ConexaoFactory.criarConexao()){
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getSenha());
-            stmt.setBoolean(3, usuario.getIsAdmin());
-            stmt.setBoolean(4, usuario.getIsAutenticado());
-            stmt.setString(5, usuario.getPreferenciaLog());
+            stmt.setString(2, usuario.getEmail());
+            stmt.setString(3, usuario.getSenha());
+            stmt.setBoolean(4, usuario.getIsAdmin());
+            stmt.setBoolean(5, usuario.getIsAutenticado());
+            stmt.setString(6, usuario.getPreferenciaLog());
 
-            stmt.executeUpdate();
-        } catch (Exception e) {
-            throw new RuntimeException("Não foi posssível inserir um usuário ao banco." + "\n" + e.getMessage());
-        }
-
-    }
-
-    public void autorizar(String nome) {
-        String sql = "UPDATE usuarios SET foi_autenticado = ? WHERE nome = ?";
-        try(Connection conexao = ConexaoFactory.criarConexao()){
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setBoolean(1, true);
-            stmt.setString(2, nome);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Erro ao autorizar usuário ao banco");
+            throw new OperacaoUsuarioDAOException(
+                    MensagensErroBanco.FALHA_INSERIR_USUARIO.getTexto(),
+                    e
+            );
         }
+
     }
     @Override
-    public void atualizarPreferencia(Usuario usuario){
-        String sql = "UPDATE usuarios SET preferencia_log = ? WHERE id = ?";
+    public void atualizar(Usuario usuario){
+
+        String sql = "UPDATE usuarios SET nome = ?, email = ?, senha_hash = ?, preferencia_log = ?, is_admin = ?, foi_autenticado = ?  WHERE id = ?";
 
         try(Connection conexao = ConexaoFactory.criarConexao()){
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, usuario.getPreferenciaLog());
-            stmt.setInt(2, usuario.getId());
+            stmt.setString( 1, usuario.getNome());
+            stmt.setString( 2, usuario.getEmail());
+            stmt.setString( 3, usuario.getSenha());
+            stmt.setString( 4, usuario.getPreferenciaLog());
+            stmt.setBoolean(5, usuario.getIsAdmin());
+            stmt.setBoolean(6, usuario.getIsAutenticado());
+            stmt.setInt(7, usuario.getId());
+
+
+
             stmt.executeUpdate();
         }catch(SQLException e){
-            System.out.println("Erro ao atualizar a preferencia de log no banco");
+            throw new OperacaoUsuarioDAOException(MensagensErroBanco.FALHA_ATUALIZAR_USUARIO.getTexto(), e);
         }
 
     }
     @Override
-    public void atualizarNome(String nome){
-        String sql = "UPDATE usuarios SET nome = ? , senha_hash = ? WHERE nome = ?";
-
-        try(Connection conexao = ConexaoFactory.criarConexao()){
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, nome);
-            stmt.setString(3, nome);
-            stmt.executeUpdate();
-        }catch(SQLException e){
-            System.out.println("Erro ao atualizar Senha ao banco");
-        }
-    }
-
-    @Override
-    public void atualizarSenha(String nome, String senha) {
-
-        String sql = "UPDATE usuarios SET senha_hash = ? WHERE id = ?";
-
-        try(Connection conexao = ConexaoFactory.criarConexao()){
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, senha);
-            stmt.setString(2, nome);
-            stmt.executeUpdate();
-        }catch(SQLException e){
-            System.out.println("Erro ao atualizar Senha ao banco");
-        }
-    }
-
-    @Override
-    public void excluir(String nome) {
-        String sql = "DELETE FROM usuarios WHERE nome = ?";
+    public void excluir(int id) {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
 
         try (Connection conexao = ConexaoFactory.criarConexao()){
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, nome);
+            stmt.setInt(1, id);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println("Erro ao deletar um usuario");
+            throw new OperacaoUsuarioDAOException(MensagensErroBanco.FALHA_EXCLUIR_USUARIO.getTexto(), e);
+
         }
 
     }
-
-
-    public Usuario buscarPorNome(String nome) {
-        String sql = "SELECT * FROM usuarios WHERE nome = ?";
+    @Override
+    public Usuario buscarPorEmail(String email){
+        String sql = "SELECT * FROM  usuarios WHERE email = ?";
         Usuario usuario = null;
+
 
         try(Connection conexao = ConexaoFactory.criarConexao()){
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, nome);
+            stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
                 usuario = new Usuario();
                 usuario.setId(rs.getInt("id"));
+                usuario.setEmail(rs.getString("email"));
                 usuario.setNome(rs.getString("nome"));
                 usuario.setSenha(rs.getString("senha_hash"));
                 usuario.setIsAdmin(rs.getBoolean("is_admin"));
@@ -127,11 +97,42 @@ public class UsuarioDAOSQLite implements UsuariosDAO {
             }
 
         }catch(SQLException e){
-            throw new NotFoundException("Erro ao buscar usuario por nome");
+            throw new OperacaoUsuarioDAOException(MensagensErroBanco.FALHA_BUSCAR_USUARIO_POR_EMAIL.getTexto(), e);
         }
 
         return usuario;
+    }
+    @Override
+    public List<Usuario> buscarPorNome(String nome) {
+        String sql = "SELECT * FROM usuarios WHERE nome COLLATE NOCASE LIKE ?";
+        List<Usuario> usuarios = new ArrayList<>();
 
+        try (Connection conexao = ConexaoFactory.criarConexao()) {
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setString(1, nome + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId(rs.getInt("id"));
+                usuario.setEmail(rs.getString("email"));
+                usuario.setNome(rs.getString("nome"));
+                usuario.setSenha(rs.getString("senha_hash"));
+                usuario.setIsAdmin(rs.getBoolean("is_admin"));
+                usuario.setAutenticacao(rs.getBoolean("foi_autenticado"));
+                usuario.setPreferenciaLog(rs.getString("preferencia_log"));
+                usuario.setCriadoEm(rs.getString("criado_em"));
+
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            throw new OperacaoUsuarioDAOException(
+                    MensagensErroBanco.FALHA_BUSCAR_USUARIOS_POR_NOME.getTexto(),
+                    e
+            );
+        }
+
+        return usuarios;
     }
     @Override
     public Usuario buscarPorId(int id) {
@@ -145,6 +146,7 @@ public class UsuarioDAOSQLite implements UsuariosDAO {
             if(rs.next()){
                 usuario = new Usuario();
                 usuario.setId(rs.getInt("id"));
+                usuario.setEmail(rs.getString("email"));
                 usuario.setNome(rs.getString("nome"));
                 usuario.setSenha(rs.getString("senha_hash"));
                 usuario.setIsAdmin(rs.getBoolean("is_admin"));
@@ -155,12 +157,12 @@ public class UsuarioDAOSQLite implements UsuariosDAO {
             }
 
         }catch(SQLException e){
-            System.out.println("Erro ao buscar usuario");
+            throw new OperacaoUsuarioDAOException(MensagensErroBanco.FALHA_BUSCAR_USUARIO_POR_ID.getTexto(), e);
+
         }
 
         return usuario;
     }
-
     @Override
     public List<Usuario> listarTodos() {
         String sql = "SELECT * FROM Usuarios" ;
@@ -174,6 +176,7 @@ public class UsuarioDAOSQLite implements UsuariosDAO {
                 while (rs.next()) {
                     Usuario usuario = new Usuario();
                     usuario.setId(rs.getInt("id"));
+                    usuario.setEmail(rs.getString("email"));
                     usuario.setNome(rs.getString("nome"));
                     usuario.setSenha(rs.getString("senha_hash"));
                     usuario.setIsAdmin(rs.getBoolean("is_admin"));
@@ -185,8 +188,9 @@ public class UsuarioDAOSQLite implements UsuariosDAO {
                 }
             }
 
-        catch (Exception e) {
-            throw new RuntimeException("Não foi posssível inserir um usuário ao banco." + "\n" + e.getMessage());
+        catch (SQLException e) {
+            throw new OperacaoUsuarioDAOException(MensagensErroBanco.FALHA_LISTAR_USUARIOS.getTexto(), e);
+
         }
         return usuarios;
 
