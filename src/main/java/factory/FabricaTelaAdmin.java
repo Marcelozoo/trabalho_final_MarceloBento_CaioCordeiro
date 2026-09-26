@@ -18,6 +18,8 @@ public class FabricaTelaAdmin implements FabricaDeTela {
     public TelaPresenter criar(ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
         return new TelaAdminPresenter(usuario,
                 gerenciadorTelas,
-                provedor.obterUsuarioService());
+                provedor.obterUsuarioService(),
+                provedor.obterNotificacaoService()
+        );
     }
 }

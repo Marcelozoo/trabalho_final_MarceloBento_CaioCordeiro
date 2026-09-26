@@ -1,16 +1,15 @@
 package factory;
 
 import models.Usuario;
-import presenters.TelaVisualizacaoPresenter;
 import presenters.TelaPresenter;
+import presenters.TelaVisualizacaoPresenter;
 import services.GerenciadorTelasService;
 import services.ProvedorService;
 
-public class FabricaTelaVisualizacao implements FabricaDeTela {
-
+public class FabricaTelaUsuarioComum implements FabricaDeTela {
     private final Usuario usuario;
 
-    public FabricaTelaVisualizacao(Usuario usuario) {
+    public FabricaTelaUsuarioComum(Usuario usuario) {
         this.usuario = usuario;
     }
 
@@ -21,4 +20,5 @@ public class FabricaTelaVisualizacao implements FabricaDeTela {
                 provedor.obterUsuarioService(),
                 gerenciadorTelas);
     }
+
 }

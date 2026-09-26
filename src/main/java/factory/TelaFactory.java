@@ -14,27 +14,33 @@ public class TelaFactory {
         return new FabricaTelaLogin().criar(provedor, gerenciadorTelas);
     }
 
-    public static TelaPresenter telaCadastro(ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
-        return new FabricaTelaCadastro().criar(provedor, gerenciadorTelas);
+    public static TelaPresenter telaCadastro(boolean eAdmin,ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
+        return new FabricaTelaCadastro(eAdmin).criar(provedor, gerenciadorTelas);
     }
 
     public static TelaPresenter telaAdmin(Usuario usuario, ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
         return new FabricaTelaAdmin(usuario).criar(provedor, gerenciadorTelas);
     }
 
-    public static TelaPresenter telaVisualizacao(String nome, ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
-        return new FabricaTelaVisualizacao(nome).criar(provedor, gerenciadorTelas);
+    public static TelaPresenter telaVisualizacao(Usuario usuario, ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
+        return new FabricaTelaVisualizacao(usuario).criar(provedor, gerenciadorTelas);
     }
 
     public static TelaPresenter telaEnviarNotificacoes(Usuario usuario, ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
         return new FabricaTelaEnviarNotificacoes(usuario).criar(provedor, gerenciadorTelas);
     }
 
-    public static TelaPresenter telaEdicao(String nome, ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
-        return new FabricaTelaEdicao(nome).criar(provedor, gerenciadorTelas);
+    public static TelaPresenter telaEdicao(Usuario usuario, ProvedorService provedor, GerenciadorTelasService gerenciadorTelas) {
+        return new FabricaTelaEdicao(usuario).criar(provedor, gerenciadorTelas);
     }
 
-    public static TelaPresenter telaNotificacao(ProvedorService provedor, GerenciadorTelasService g) {
-        return new FabricaTelaNotificacao().criar(provedor, g);
+    public static TelaPresenter telaNotificacao(Usuario usuario, ProvedorService provedor, GerenciadorTelasService g) {
+        return new FabricaTelaNotificacao(usuario).criar(provedor, g);
     }
+
+    public static TelaPresenter telaUsuarioComum(Usuario usuarioAutenticado, ProvedorService provedor, GerenciadorTelasService g) {
+        return new FabricaTelaUsuarioComum(usuarioAutenticado).criar(provedor, g);
+    }
+
+
 }
