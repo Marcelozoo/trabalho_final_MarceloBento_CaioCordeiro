@@ -23,28 +23,28 @@ public class GerenciadorTelasService {
         abrir(tipo.getTipo(), g -> TelaFactory.telaLogin(provedor, g));
     }
 
-    public void abrirCadastro(TipoTela tipo) {
-        abrir(tipo.getTipo(), g -> TelaFactory.telaCadastro(provedor, g));
+    public void abrirCadastro(TipoTela tipo, boolean eAdmin) {
+        abrir(tipo.getTipo(), g -> TelaFactory.telaCadastro(eAdmin,provedor, g));
     }
 
     public void abrirAdmin(TipoTela tipo, Usuario usuario) {
         abrir(tipo.getTipo(), g -> TelaFactory.telaAdmin(usuario, provedor, g));
     }
 
-    public void abrirVisualizacao(TipoTela tipo, String nome) {
-        abrir(tipo.getTipo(), g -> TelaFactory.telaVisualizacao(nome, provedor, g));
+    public void abrirVisualizacao(TipoTela tipo, Usuario usuario) {
+        abrir(tipo.getTipo(), g -> TelaFactory.telaVisualizacao(usuario, provedor, g));
     }
 
     public void abrirEnviarNotificacoes(TipoTela tipo, Usuario usuario) {
         abrir(tipo.getTipo(), g -> TelaFactory.telaEnviarNotificacoes(usuario, provedor, g));
     }
 
-    public void abrirEdicao(TipoTela tipo, String nome) {
-            abrir(tipo.getTipo(), g -> TelaFactory.telaEdicao(nome, provedor, g));
+    public void abrirEdicao(TipoTela tipo, Usuario usuario) {
+            abrir(tipo.getTipo(), g -> TelaFactory.telaEdicao(usuario, provedor, g));
     }
 
-    public void abrirNotificacoes(TipoTela tipo){
-        abrir(tipo.getTipo(), g -> TelaFactory.telaNotificacao(provedor, g));
+    public void abrirNotificacoes(TipoTela tipo, Usuario usuario) {
+        abrir(tipo.getTipo(), g -> TelaFactory.telaNotificacao(usuario, provedor, g));
     }
 
     public void fechar(String tipo) {
@@ -59,5 +59,14 @@ public class GerenciadorTelasService {
         telas.computeIfAbsent(tipo, k -> fabrica.apply(this));
     }
 
+    public void fecharTudo(){
+        for (TelaPresenter telas : telas.values()){
+            telas.fechar();
+        }
+        telas.clear();
+    }
 
+    public void abrirUsuarioComum(TipoTela  tipo, Usuario usuarioAutenticado) {
+        abrir(tipo.getTipo(), g -> TelaFactory.telaUsuarioComum(usuarioAutenticado, provedor, g));
+    }
 }
