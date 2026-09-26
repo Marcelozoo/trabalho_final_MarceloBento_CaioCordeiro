@@ -2,10 +2,15 @@ package presenters;
 
 import views.TelaUsuarioView;
 
-public class TelaUsuarioPresenter {
+import javax.swing.*;
+
+public class TelaUsuarioPresenter implements TelaPresenter{
 
 
-
+    @Override
+    public void fechar(){
+        tela.dispose();
+    }
 
     private final TelaUsuarioView tela;
 
@@ -17,5 +22,7 @@ public class TelaUsuarioPresenter {
     private void config(){
 //        tela.getBtnNotificacoes().setText();
     }
+
+
 
 }

@@ -1,201 +1,181 @@
 package presenters;
 
-import command.BuscarCommand;
+import command.BuscarNotificacoesNLidasCommand;
+import command.BuscarUsuariosCommand;
 import command.Command;
 import command.Invoke;
-import command.ListarCommand;
 import eventosTela.EventosTela;
+import models.Notificacao;
 import models.ResultadoOperacao;
 import models.Usuario;
 import navegacao.TipoTela;
 import observer.Observer;
-import services.*;
+import services.GerenciadorEventosSingleton;
+import services.GerenciadorTelasService;
+import services.NotificacaoService;
+import services.UsuarioService;
 import state.EstadoTela;
 import state.LogadoState;
 import utilidades.FormatarErros;
 import views.TelaAdminView;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TelaAdminPresenter implements Observer, TelaPresenter {
 
     private final TelaAdminView tela;
-    private EstadoTela estadoTela;
+    private final EstadoTela estadoTela;
     private final Invoke invokeCommands;
     private final Usuario usuario;
     private final GerenciadorTelasService gerenciadorTelas;
     private final UsuarioService usuarioService;
+    private final Map<Integer, Usuario> usuariosPorLinha;
+    private final NotificacaoService notificacaoService;
 
-
-
-    public TelaAdminPresenter(Usuario usuario, GerenciadorTelasService gerenciadorTelas, UsuarioService usuarioService) {
-
+    public TelaAdminPresenter(
+            Usuario usuario,
+            GerenciadorTelasService gerenciadorTelas,
+            UsuarioService usuarioService,
+            NotificacaoService notificacaoService
+    ) {
         this.usuario = usuario;
         this.gerenciadorTelas = gerenciadorTelas;
         this.usuarioService = usuarioService;
-
-
         this.tela = new TelaAdminView();
-        this.estadoTela = new EstadoTela();
         this.invokeCommands = new Invoke();
+        this.usuariosPorLinha = new HashMap<>();
+        this.notificacaoService  = notificacaoService;
+
+
+        this.estadoTela = new EstadoTela();
+
         this.estadoTela.setEstado(new LogadoState(estadoTela));
 
         GerenciadorEventosSingleton.getInstancia().registrar(this);
 
-        configBtns();
-        configLabels();
-        configFechamentoTela();
+        configuraBtns();
+        configuraRodape();
     }
 
-    private void configFechamentoTela(){
-        tela.addWindowListener(new WindowAdapter() {
+    private void configuraNotificacoesNLidas(){
+        tela.setQtdNotificacoesNLidas(this.usuario.getQtdNotificacoesNLidas());
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                gerenciadorTelas.fechar(
-                        TipoTela.TELA_ADMIN.getTipo()
-                );
-            }
-        });
-    }
 
-    private void configLabels(){
-        tela.getNomeUsuarioLabel().setText(usuario.getNome());
-        tela.getTipoUsuarioLabel().setText(usuario.getIsAdmin() ? "Admin" : "Comum");
+
+
+
 
     }
+    private void configuraRodape() {
 
+        tela.mudarNomeLabel(usuario.getNome());
+        tela.mudarTipoLabel(usuario.getIsAdmin() ? "Admin" : "Usuário Comum");
+    }
 
+    private void configuraBtns() {
+
+        configurarBtnSair();
+        configurarBtnBuscar();
+        configuraBtnNovo();
+        configuraBtnVisualizar();
+        configuraBtnNotificacoes();
+        configuraBtnEnviarNotificacoes();
+        configuraBtnFechamentoTela();
+
+    }
 
     @Override
     public void update(EventosTela tipo, Object arg) {
-        if(tipo == EventosTela.CADASTRO_REALIZADO_COM_SUCESSO || tipo == EventosTela.USUARIO_EXCLUIDO_COM_SUCESSO){
-            Command<List<Usuario>> listar = new ListarCommand(usuarioService);
-            invokeCommands.setComando(listar);
-            estadoTela.atualizar(invokeCommands);
-
-            ResultadoOperacao<List<Usuario>> resultado = listar.getResultado();
-            if (resultado != null) {
-                atualizaTabelaLista(resultado.getResultado());
-            }
-        }
 
     }
-
-    private void configBtns(){
-
-
-        tela.getBtnSair().addActionListener(e -> {tela.dispose();});
+    private void configuraBtnFechamentoTela() {
+        tela.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                fecharTela();
+            }
+        });
+    }
+    private void configurarBtnSair(){
+        tela.getBtnSair().addActionListener(e -> {
+            gerenciadorTelas.fecharTudo();
+            gerenciadorTelas.abrirLogin(TipoTela.TELA_LOGIN);
+        });
+    }
+    private void configurarBtnBuscar(){
         tela.getBtnBuscar().addActionListener(e -> {
-            String nome = tela.getNomeUsuarioText().getText();
-
-            BuscarCommand buscar = new BuscarCommand(nome, usuarioService);
-            invokeCommands.setComando(buscar);
-            estadoTela.buscar(invokeCommands);
-
-            ResultadoOperacao<Usuario> resultado = buscar.getResultado();
-
-            if (!resultado.eValido()){
+            ResultadoOperacao<List<Usuario>> resultado = buscarUsuario();
+            if (!resultado.eValido()) {
                 tela.mostrarMensagem(FormatarErros.unificarErros(resultado.getErros()));
-            }else{
-                atualizaTabela(resultado.getResultado());
             }
 
         });
-        tela.getBtnNovo().addActionListener(e -> {
-            gerenciadorTelas.abrirCadastro(TipoTela.TELA_CADASTRO);
-            //TelaCadastroPresenter ob = new TelaCadastroPresenter(this.cadastro, gerenciadorTelas);
+    }
+    private ResultadoOperacao<List<Usuario>> buscarUsuario(){
+        BuscarUsuariosCommand buscar = new BuscarUsuariosCommand(obterNomeDigitado(), usuarioService);
+        invokeCommands.setComando(buscar);
+        estadoTela.buscar(invokeCommands);
 
-            //GerenciadorEventosSingleton.getInstancia().registrar(ob);
+        return buscar.getResultado();
+    }
 
 
-        });
-        tela.getBtnListarTodos().addActionListener(e -> {
-            Command<List<Usuario>> listar = new ListarCommand(usuarioService);
-            invokeCommands.setComando(listar);
-            estadoTela.listar(invokeCommands);
+    private void configuraBtnNovo(){
+        tela.getBtnNovo().addActionListener(e -> {gerenciadorTelas.abrirCadastro(TipoTela.TELA_CADASTRO, true);});
 
-            ResultadoOperacao<List<Usuario>> resultado = listar.getResultado();
-            if (resultado != null) {
-                atualizaTabelaLista(resultado.getResultado());
-            }
-        });
-
+    }
+    private void configuraBtnVisualizar(){
         tela.getBtnVisualizar().addActionListener(e -> {
-            int linha = tela.getTabelaUsuarios().getSelectedRow();
-            try {
-                String nome = (String) tela.getTabelaUsuarios().getValueAt(linha, 0);
-                gerenciadorTelas.abrirVisualizacao(TipoTela.criarTelaVisualizacaoUsuario(nome), nome);
-
-            }catch (ArrayIndexOutOfBoundsException excecao){
+            int linha = tela.obterLinhaSelecionadaNaTabela();
+            Usuario usuarioSelecionado = this.usuariosPorLinha.get(linha);
+            if (usuarioSelecionado == null) {
                 mostrarMensagem("Selecione um usuario");
+                return;
             }
-
-        });
-
-        tela.getBtnNotificacoes().addActionListener(e -> {
-            gerenciadorTelas.abrirNotificacoes(TipoTela.TELA_NOTIFICACOES);
-        });
-
-        tela.getBtnEnviarNotificacoes().addActionListener(e -> {
-            gerenciadorTelas.abrirEnviarNotificacoes(TipoTela.TELA_ENVIAR_NOTIFICACOES,usuario);
+            gerenciadorTelas.abrirVisualizacao(
+                    TipoTela.criarTelaVisualizacaoUsuario(usuarioSelecionado.getId()),
+                    usuarioSelecionado
+            );
         });
     }
-    private void atualizaTabelaLista(List<Usuario> usuarios){
-        DefaultTableModel modelo =
-                (DefaultTableModel) tela.getTabelaUsuarios().getModel();
-
-        modelo.setRowCount(0);
-
-        for (Usuario usuario : usuarios){
-            modelo.addRow(new Object[]{
-                    usuario.getNome(),
-                    usuario.getCriadoEm(),
-                    usuario.getQtdNotificacoesLidas(),
-                    usuario.getQtdNotificacoesEnviadas()
-            });
-        }
 
 
+    private void configuraBtnNotificacoes(){
+        tela.getBtnNotificacoes().addActionListener(e ->
+                gerenciadorTelas.abrirNotificacoes(TipoTela.TELA_NOTIFICACOES, usuario)
+        );
+    }
+    private void configuraBtnEnviarNotificacoes(){
+
+        tela.getBtnEnviarNotificacoes().addActionListener(e ->
+                gerenciadorTelas.abrirEnviarNotificacoes(TipoTela.TELA_ENVIAR_NOTIFICACOES, usuario)
+        );
+    }
+
+    private String obterNomeDigitado(){
+        return tela.getNomeUsuarioText();
     }
 
 
-    private void mostrarMensagem(String mensagem){
+
+    private void fecharTela(){
+        gerenciadorTelas.fechar(TipoTela.TELA_ADMIN.getTipo());
+        tela.dispose();
+    }
+    @Override
+    public void fechar(){
+        tela.dispose();
+    }
+
+  
+    private void mostrarMensagem(String mensagem) {
         tela.mostrarMensagem(mensagem);
     }
-    private void atualizaTabela(Usuario usuario){
-        DefaultTableModel modelo =
-                (DefaultTableModel) tela.getTabelaUsuarios().getModel();
-
-        modelo.setRowCount(0);
-
- 
-
-            modelo.addRow(new Object[]{
-                    usuario.getNome(),
-                    usuario.getCriadoEm(),
-                    usuario.getQtdNotificacoesLidas(),
-                    usuario.getQtdNotificacoesEnviadas()
-            });
-        
-
-
-    }
-
-    @Override
-    public TelaPresenter getTela() {
-        return null;
-    }
-
-    @Override
-    public JInternalFrame getTelaView() {
-        return null;
-    }
-
 
 
 }

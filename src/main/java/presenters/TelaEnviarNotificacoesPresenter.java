@@ -46,7 +46,7 @@ public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter 
         GerenciadorEventosSingleton.getInstancia().registrar(this);
 
         config();
-        configBtns();
+        configuraBtns();
         configFechamentoTela();
 
     }
@@ -82,25 +82,30 @@ public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter 
         Command<List<Usuario>> listar = new ListarCommand(usuarioService);
         invokeCommands.setComando(listar);
 
-        estadoTela.enviarNotificacoes(invokeCommands);
+        estadoTela.listar(invokeCommands);
 
         ResultadoOperacao<List<Usuario>> resultado =  listar.getResultado();
 
 
         DefaultListModel<String> modelo = (DefaultListModel<String>) tela.getListaUsuarios().getModel();
         modelo.clear();
-        for(Usuario usuario : resultado.getResultado()){
-            modelo.addElement(usuario.getNome());
+        for (Usuario usuario : resultado.getResultado()) {
+            modelo.addElement(usuario.getEmail());
         }
     }
 
-    private void configBtns(){
+    private void configuraBtnEnviar(){
         tela.getBtnEnviar().addActionListener(e -> {
             List<String> selecionados = tela.getListaUsuarios().getSelectedValuesList();
             String msg = tela.getMensagemTextArea().getText();
 
             for (String selecionado : selecionados) {
-                Command<Void> enviar = new EnviarNotificacaoCommand(selecionado, usuarioSessao.getNome(),msg,enviarNotificacaoService);
+                Command<Void> enviar = new EnviarNotificacaoCommand(
+                        selecionado,
+                        usuarioSessao.getEmail(),
+                        msg,
+                        enviarNotificacaoService
+                );
                 invokeCommands.setComando(enviar);
                 estadoTela.enviarNotificacoes(invokeCommands);
 
@@ -112,18 +117,17 @@ public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter 
         });
     }
 
+    private void configuraBtns(){
+        configuraBtnEnviar();
+    }
+
     private void mostrarMensagem(String mensagem){
         tela.mostrarMensagem(mensagem);
     }
 
     @Override
-    public TelaPresenter getTela() {
-        return null;
-    }
-
-    @Override
-    public JInternalFrame getTelaView() {
-        return null;
+    public void fechar(){
+        tela.dispose();
     }
 
 }

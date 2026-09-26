@@ -8,6 +8,7 @@ import navegacao.TipoTela;
 import services.GerenciadorTelasService;
 import services.UsuarioService;
 import state.EstadoTela;
+import state.LogandoState;
 import utilidades.FormatarErros;
 import views.TelaLoginView;
 
@@ -29,61 +30,77 @@ public class TelaLoginPresenter implements TelaPresenter {
         this.estadoTela = new EstadoTela();
         this.tela = new TelaLoginView();
 
-        configBtns();
+        this.estadoTela.setEstado(new LogandoState(this.estadoTela));
+
+
+        configuraBtns();
     }
 
+    private void configuraBtns(){
 
-    public void configBtns(){
+        configuraBtnLogar();
+        configuraBtnCadastrar();
+
+    }
+
+    private void configuraBtnLogar(){
         tela.getBtnLogar().addActionListener(e -> {
-            String usuario = tela.getUsuarioText().getText();
-            String senha =  new String(tela.getSenhaText().getPassword());
 
-            AutenticarLoginCommand autenticar = new AutenticarLoginCommand(usuario, senha, usuarioService);
-            invokeCommands.setComando(autenticar);
-
-            estadoTela.autenticarLogin(invokeCommands);
-
-            ResultadoOperacao<Usuario> resultado = autenticar.getResultado();
+            ResultadoOperacao<Usuario> resultado = autenticarUsuario();
 
             if (!resultado.eValido()){
                 tela.mostrarMensagem(FormatarErros.unificarErros(resultado.getErros()));
-
-            }else{
-
-                Usuario usuarioAutenticado = resultado.getResultado();
-
-                if(usuarioAutenticado.getIsAdmin()){
-                    gerenciadorTelas.abrirAdmin(TipoTela.TELA_ADMIN, usuarioAutenticado);
-                }else{
-
-                }
-
-                tela.dispose();
+                return;
             }
 
+            logarUsuario(resultado);
+
 
         });
+    }
 
+    private String obterEmailDigitado(){
+        return tela.getEmailText().getText();
+    }
+
+    private String obterSenhaDigitada(){
+        return tela.getSenhaText().getText();
+    }
+
+    private ResultadoOperacao<Usuario> autenticarUsuario(){
+        AutenticarLoginCommand autenticar = new AutenticarLoginCommand(obterEmailDigitado(),obterSenhaDigitada(), usuarioService);
+        invokeCommands.setComando(autenticar);
+        estadoTela.autenticarLogin(invokeCommands);
+
+        return autenticar.getResultado();
+    }
+
+    private void logarUsuario(ResultadoOperacao<Usuario> resultado){
+        Usuario usuarioAutenticado = resultado.getResultado();
+
+        gerenciadorTelas.fecharTudo();
+
+        if(usuarioAutenticado.getIsAdmin()){
+            gerenciadorTelas.abrirAdmin(TipoTela.TELA_ADMIN, usuarioAutenticado);
+        }else{
+            gerenciadorTelas.abrirUsuarioComum(TipoTela.TELA_USUARIO_COMUM, usuarioAutenticado);
+        }
+    }
+
+    private void configuraBtnCadastrar(){
         tela.getBtnCadastrar().addActionListener(e -> {
-             gerenciadorTelas.abrirCadastro(TipoTela.TELA_CADASTRO);
+            gerenciadorTelas.abrirCadastro(TipoTela.TELA_CADASTRO, false);
         });
-
-
-
     }
 
-    public TelaLoginView obterView(){
-        return tela;
+    private void fecharTela(){
+        gerenciadorTelas.fechar(TipoTela.TELA_LOGIN.getTipo());
+        tela.dispose();
     }
 
 
     @Override
-    public TelaPresenter getTela() {
-        return null;
-    }
-
-    @Override
-    public JInternalFrame getTelaView() {
-        return null;
+    public void fechar(){
+        tela.dispose();
     }
 }
