@@ -7,6 +7,7 @@ public class Usuario {
 
     private int id;
     private String nome;
+    private String email;
     private String senha;
     private boolean isAdmin;
     private boolean foiAutenticado;
@@ -15,6 +16,7 @@ public class Usuario {
 
     private ArrayList<Notificacao> notificacoes;
     private Integer qtdNotificacao = 0;
+    private Integer qtdNotificacoesNLidas;
     private Integer qtdNotificacoesLidas = 0;
     private Integer qtdNotificacoesEnviadas = 0;
 
@@ -34,7 +36,9 @@ public class Usuario {
     public void addNotificacao(Notificacao msg) {
         this.notificacoes.add(msg);
     }
-
+    public void setGetQtdNotificacoesNLidas(int qtd){
+        this.qtdNotificacoesNLidas = qtd;
+    }
     public void setId(int id){
         this.id = id;
     }
@@ -64,6 +68,9 @@ public class Usuario {
         this.qtdNotificacao = qtd;
     }
 
+    public Integer getQtdNotificacoesNLidas(){
+        return qtdNotificacoesNLidas;
+    }
     public int getId() {return this.id;}
     public String getNome() {
         return this.nome;
@@ -98,4 +105,11 @@ public class Usuario {
                 "DATA CRIACAO: " + this.criadoEm + "\n";
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail(){
+        return this.email;
+    }
 }

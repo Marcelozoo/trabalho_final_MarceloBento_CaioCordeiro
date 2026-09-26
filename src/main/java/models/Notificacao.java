@@ -8,6 +8,7 @@ public class Notificacao {
     private String criadaEm;
     private boolean foiLida;
     private String conteudo;
+    private String remetenteNome;
 
 
     public Notificacao() {}
@@ -49,6 +50,14 @@ public class Notificacao {
     }
     public String getConteudo() {
         return this.conteudo;
+    }
+
+    public String getRemetenteNome() {
+        return remetenteNome;
+    }
+
+    public void setRemetenteNome(String remetenteNome) {
+        this.remetenteNome = remetenteNome;
     }
 
     @Override
