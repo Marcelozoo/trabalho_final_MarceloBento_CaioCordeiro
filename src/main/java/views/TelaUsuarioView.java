@@ -19,6 +19,8 @@ public class TelaUsuarioView extends javax.swing.JFrame {
      */
     public TelaUsuarioView() {
         initComponents();
+        setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     public JButton getBtnAlterarSenha() {
@@ -47,6 +49,17 @@ public class TelaUsuarioView extends javax.swing.JFrame {
 
     public JLabel getTipoUsuarioLabel() {
         return tipoUsuarioLabel;
+    }
+
+    public void mudarNomeLabel(String nome){
+        nomeUsuarioLabel.setText(nome);
+    }
+    public void mudarTipoLabel(String tipo){
+        tipoUsuarioLabel.setText(tipo);
+    }
+
+    public void setQtdNotificacoesNLidas(String qtd){
+        btnNotificacoes.setText(qtd);
     }
 
     /**

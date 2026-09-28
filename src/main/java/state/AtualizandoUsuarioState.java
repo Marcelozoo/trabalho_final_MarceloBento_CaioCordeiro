@@ -10,6 +10,8 @@ public class AtualizandoUsuarioState extends Estado{
     }
 
 
+
+
     @Override
     public void excluir(Invoke invoke) {
         estadoTela.setEstado(new DeletandoUsuarioState(estadoTela));
@@ -19,7 +21,7 @@ public class AtualizandoUsuarioState extends Estado{
     @Override
     public void autenticar(Invoke invoke) {
         estadoTela.setEstado(new AtualizandoUsuarioState(estadoTela));
-        estadoTela.autenticar(invoke);
+        invoke.executar();
     }
 
     @Override

@@ -15,6 +15,12 @@ public class BuscandoNotificacoesState extends Estado {
     }
 
     @Override
+    public void atualizar(Invoke invoke){
+        invoke.executar();
+        estadoTela.setEstado(new AtualizandoNotificacoesState(estadoTela));
+    }
+
+    @Override
     public String getEstado() {
         return "Buscando notificações";
     }

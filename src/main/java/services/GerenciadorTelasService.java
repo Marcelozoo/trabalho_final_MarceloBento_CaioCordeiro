@@ -19,6 +19,10 @@ public class GerenciadorTelasService {
         this.provedor = provedor;
     }
 
+    public TelaPresenter obterTela(String nomeTela){
+        return telas.get(nomeTela);
+    }
+
     public void abrirLogin(TipoTela tipo) {
         abrir(tipo.getTipo(), g -> TelaFactory.telaLogin(provedor, g));
     }

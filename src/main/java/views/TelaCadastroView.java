@@ -43,7 +43,6 @@ public class TelaCadastroView extends javax.swing.JFrame {
         emailLabel = new javax.swing.JLabel();
         emailText = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        autenticadoCheckBox = new javax.swing.JCheckBox();
         adminCheckBox = new javax.swing.JCheckBox();
         checkBoxLabel = new javax.swing.JLabel();
 
@@ -53,26 +52,21 @@ public class TelaCadastroView extends javax.swing.JFrame {
         usuarioLabel.setText("Usuario:");
 
         usuarioText.setToolTipText("");
-        usuarioText.addActionListener(this::usuarioTextActionPerformed);
 
         senhaLabel.setText("Senha:");
 
         btnCancelar.setText("Cancelar");
 
         btnCadastrar.setText("Cadastrar");
-        btnCadastrar.addActionListener(this::btnCadastrarActionPerformed);
 
         senhaNovamenteLabel.setText("Senha Novamente:");
 
         emailLabel.setText("Email:");
 
         emailText.setToolTipText("");
-        emailText.addActionListener(this::emailTextActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Leelawadee UI", 1, 14)); // NOI18N
         jLabel1.setText("CADASTRO");
-
-        autenticadoCheckBox.setText("Autenticado");
 
         adminCheckBox.setText("Admin");
 
@@ -88,7 +82,7 @@ public class TelaCadastroView extends javax.swing.JFrame {
                         .addGap(224, 224, 224)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
+                        .addContainerGap(45, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(senhaLabel)
@@ -105,10 +99,8 @@ public class TelaCadastroView extends javax.swing.JFrame {
                                 .addComponent(senhaText))
                             .addComponent(checkBoxLabel)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(124, 124, 124)
-                                .addComponent(adminCheckBox)
-                                .addGap(26, 26, 26)
-                                .addComponent(autenticadoCheckBox)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 383, Short.MAX_VALUE)
+                                .addComponent(adminCheckBox)))))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -118,47 +110,33 @@ public class TelaCadastroView extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(usuarioLabel)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(usuarioText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(emailLabel)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(emailText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(senhaLabel)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(senhaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(senhaNovamenteLabel)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(senhaNovamenteText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(checkBoxLabel)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(autenticadoCheckBox)
-                    .addComponent(adminCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(adminCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
                     .addComponent(btnCadastrar))
-                .addGap(34, 34, 34))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void usuarioTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuarioTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_usuarioTextActionPerformed
-
-    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCadastrarActionPerformed
-
-    private void emailTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_emailTextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -226,7 +204,6 @@ public class TelaCadastroView extends javax.swing.JFrame {
         senhaText.setText("");
         senhaNovamenteText.setText("");
         adminCheckBox.setSelected(false);
-        autenticadoCheckBox.setSelected(false);
     }
 
     public void mostrarMensagem(String mensagem){
@@ -236,21 +213,16 @@ public class TelaCadastroView extends javax.swing.JFrame {
     public void desabilitarBtnAdminCheckBox(){
         adminCheckBox.setEnabled(false);
     }
-    public void desabilitarBtnAutenticadoCheckBox(){
-        autenticadoCheckBox.setEnabled(false);
-    }
+
 
     public JCheckBox getAdminCheckBox() {
         return adminCheckBox;
     }
 
-    public JCheckBox getAutenticadoCheckBox() {
-        return autenticadoCheckBox;
-    }
+   
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox adminCheckBox;
-    private javax.swing.JCheckBox autenticadoCheckBox;
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JLabel checkBoxLabel;

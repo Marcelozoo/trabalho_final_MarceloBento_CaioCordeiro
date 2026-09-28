@@ -12,11 +12,12 @@ public class Notificacao {
 
 
     public Notificacao() {}
-    public Notificacao(String conteudo, int remetenteId, int destinatarioId) {
+    public Notificacao(String conteudo, int remetenteId, int destinatarioId, String remetenteNome) {
         this.conteudo = conteudo;
         this.remetenteId = remetenteId;
         this.destinatarioId = destinatarioId;
         this.foiLida = false;
+        this.remetenteNome = remetenteNome;
     }
 
     public void setId(int id) {this.id = id;}
@@ -58,6 +59,7 @@ public class Notificacao {
 
     public void setRemetenteNome(String remetenteNome) {
         this.remetenteNome = remetenteNome;
+
     }
 
     @Override

@@ -21,6 +21,7 @@ import views.TelaEnviarNotificacoesView;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter {
@@ -33,6 +34,8 @@ public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter 
     private final EnviarNotificacaoService enviarNotificacaoService;
     private Usuario usuarioSessao;
     private  final GerenciadorTelasService gerenciadorTelas;
+    private List<Usuario> listaUsuario;
+
 
     public TelaEnviarNotificacoesPresenter(Usuario usuarioSessao, UsuarioService usuarioService, EnviarNotificacaoService enviarNotificacaoService, GerenciadorTelasService gerenciadorTelas) {
         this.tela = new TelaEnviarNotificacoesView();
@@ -43,6 +46,8 @@ public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter 
         this.enviarNotificacaoService = enviarNotificacaoService;
         this.usuarioSessao = usuarioSessao;
         this.gerenciadorTelas = gerenciadorTelas;
+        this.listaUsuario = new ArrayList<>();
+
         GerenciadorEventosSingleton.getInstancia().registrar(this);
 
         config();
@@ -52,10 +57,10 @@ public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter 
     }
 
     @Override
-    public void update(EventosTela tipo, Object arg) {
-        if(tipo == EventosTela.USUARIO_EXCLUIDO_COM_SUCESSO){
-            listarUsuarios();
-        }
+    public void update() {
+
+        listarUsuarios();
+
     }
 
     private void configFechamentoTela(){
@@ -86,33 +91,41 @@ public class TelaEnviarNotificacoesPresenter implements Observer, TelaPresenter 
 
         ResultadoOperacao<List<Usuario>> resultado =  listar.getResultado();
 
-
-        DefaultListModel<String> modelo = (DefaultListModel<String>) tela.getListaUsuarios().getModel();
-        modelo.clear();
-        for (Usuario usuario : resultado.getResultado()) {
-            modelo.addElement(usuario.getEmail());
+        limparTabela();
+        for (Usuario usuario : resultado.getResultado()){
+            tela.preencherTabelaComUsuarios(usuario.getNome(), usuario.getEmail());
         }
+
+        listaUsuario = resultado.getResultado();
+
     }
 
+    private void limparTabela(){
+        tela.limparTabela();
+    }
     private void configuraBtnEnviar(){
         tela.getBtnEnviar().addActionListener(e -> {
-            List<String> selecionados = tela.getListaUsuarios().getSelectedValuesList();
-            String msg = tela.getMensagemTextArea().getText();
+            
+            List<Object> selecionados = tela.getUsuariosSelecionadosNaTabela();
 
-            for (String selecionado : selecionados) {
-                Command<Void> enviar = new EnviarNotificacaoCommand(
-                        selecionado,
-                        usuarioSessao.getEmail(),
-                        msg,
-                        enviarNotificacaoService
-                );
-                invokeCommands.setComando(enviar);
-                estadoTela.enviarNotificacoes(invokeCommands);
+           String msg = tela.getMensagemASerEnviada();
 
-                if(!enviar.getResultado().eValido()){
-                    mostrarMensagem(FormatarErros.unificarErros(enviar.getResultado().getErros()));
-                }
-            }
+           for (Object selecionado : selecionados){
+               Command<Void> enviar = new EnviarNotificacaoCommand(
+                       selecionado.toString(),
+                       usuarioSessao.getEmail(),
+                       msg,
+                       enviarNotificacaoService
+               );
+               invokeCommands.setComando(enviar);
+               estadoTela.enviarNotificacoes(invokeCommands);
+
+               if(!enviar.getResultado().eValido()){
+                   mostrarMensagem(FormatarErros.unificarErros(enviar.getResultado().getErros()));
+                   return;
+               }
+           }
+
             mostrarMensagem("Sucesso ao enviar as notificacoes");
         });
     }

@@ -5,6 +5,9 @@
 package views;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,6 +17,7 @@ public class TelaEnviarNotificacoesView extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEnviarNotificacoesView.class.getName());
 
+    DefaultTableModel modeloTabela;
     /**
      * Creates new form EnviarNotificacoesView
      */
@@ -22,8 +26,10 @@ public class TelaEnviarNotificacoesView extends javax.swing.JFrame {
         setVisible(true);
         setLocationRelativeTo(null);
 
-        DefaultListModel<String> modelo = new DefaultListModel<>();
-        listaUsuarios.setModel(modelo);
+     
+        
+        
+        modeloTabela = (DefaultTableModel) listaUsuarios.getModel();
 
 
 
@@ -50,7 +56,7 @@ public class TelaEnviarNotificacoesView extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         mensagemTextArea = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
-        listaUsuarios = new javax.swing.JList<>();
+        listaUsuarios = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -64,6 +70,14 @@ public class TelaEnviarNotificacoesView extends javax.swing.JFrame {
         mensagemTextArea.setRows(5);
         jScrollPane3.setViewportView(mensagemTextArea);
 
+        listaUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nome", "Email"
+            }
+        ));
         jScrollPane5.setViewportView(listaUsuarios);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -134,22 +148,44 @@ public class TelaEnviarNotificacoesView extends javax.swing.JFrame {
     public JButton getBtnEnviar() {
         return btnEnviar;
     }
+    
+    public List<Object> getUsuariosSelecionadosNaTabela(){
+        int[] linhasSelecionadas = listaUsuarios.getSelectedRows();
+        List<Object> selecionados = new ArrayList<>();
 
-    public JList<String> getListaUsuarios() {
-        return listaUsuarios;
+        for (int linha : linhasSelecionadas) {
+
+            Object valor = listaUsuarios.getValueAt(linha, 1);
+
+            selecionados.add(valor);
+
+        }
+
+        return selecionados;
     }
 
+    public String getMensagemASerEnviada(){
+        return mensagemTextArea.getText();
+    }
+
+    public void preencherTabelaComUsuarios(String nome, String email){
+        modeloTabela.addRow(new Object[]{nome, email});
+    }
+
+    public JTable getListaUsuarios() {
+        return listaUsuarios;
+    }
+    public void limparTabela(){modeloTabela.setRowCount(0);}
     public JTextArea getMensagemTextArea() {
         return mensagemTextArea;
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JList<String> listaUsuarios;
+    private javax.swing.JTable listaUsuarios;
     private javax.swing.JTextArea mensagemTextArea;
     // End of variables declaration//GEN-END:variables
 }

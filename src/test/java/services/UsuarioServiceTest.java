@@ -1,5 +1,6 @@
 package services;
 
+import dao.NotificacaoDAO;
 import dao.UsuariosDAO;
 import excecoes.OperacaoUsuarioDAOException;
 import excecoes.enums.MensagensUsuario;
@@ -38,12 +39,14 @@ public class UsuarioServiceTest {
     private static final String FALHA_BANCO = "Falha simulada no banco.";
 
     private UsuariosDAO usuarioDAO;
+    private NotificacaoDAO notificacaoDAO;
     private UsuarioService usuarioService;
 
     @Before
     public void setUp() {
         usuarioDAO = mock(UsuariosDAO.class);
-        usuarioService = new UsuarioService(usuarioDAO);
+        notificacaoDAO = mock(NotificacaoDAO.class);
+        usuarioService = new UsuarioService(usuarioDAO, notificacaoDAO);
     }
 
     // autenticarLogin
@@ -166,6 +169,21 @@ public class UsuarioServiceTest {
     // buscar
 
     @Test
+    public void buscarComNomeVazioDeveRetornarTodosOsUsuariosDoBanco(){
+        Usuario primeiro = novoUsuario(1, "Maria Souza", EMAIL, false, true);
+        Usuario segundo = novoUsuario(2, "Marcos Lima", "marcos@exemplo.com", true, true);
+
+        List<Usuario> usuarios = Arrays.asList(primeiro, segundo);
+        when(usuarioDAO.listarTodos()).thenReturn(usuarios);
+
+        ResultadoOperacao<List<Usuario>> resultado = usuarioService.buscar("");
+
+        assertTrue(resultado.eValido());
+        assertSame(usuarios, resultado.getResultado());
+        verify(usuarioDAO).listarTodos();
+    }
+
+    @Test
     public void buscarDeveDelegarEObterUsuariosEncontrados() {
         Usuario primeiro = novoUsuario(1, "Maria Souza", EMAIL, false, true);
         Usuario segundo = novoUsuario(2, "Marcos Lima", "marcos@exemplo.com", true, true);
@@ -218,7 +236,7 @@ public class UsuarioServiceTest {
         when(usuarioDAO.listarTodos()).thenReturn(Collections.emptyList());
 
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                "Maria Souza", EMAIL, SENHA, SENHA, false, false
+                "Maria Souza", EMAIL, SENHA, SENHA, false
         );
 
         assertTrue(resultado.eValido());
@@ -241,7 +259,7 @@ public class UsuarioServiceTest {
         ));
 
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                "Maria Souza", EMAIL, SENHA, SENHA, false, false
+                "Maria Souza", EMAIL, SENHA, SENHA, false
         );
 
         assertTrue(resultado.eValido());
@@ -253,7 +271,7 @@ public class UsuarioServiceTest {
     @Test
     public void cadastrarUsuarioDeveRejeitarCamposObrigatoriosNulosSemAcessarODao() {
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                null, EMAIL, SENHA, SENHA, false, false
+                null, EMAIL, SENHA, SENHA, false
         );
 
         assertFalha(resultado, MensagensUsuario.CAMPOS_OBRIGATORIOS.getMensagem());
@@ -264,7 +282,7 @@ public class UsuarioServiceTest {
     @Test
     public void cadastrarUsuarioDeveRejeitarConfirmacaoDeSenhaNula() {
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                "Maria Souza", EMAIL, SENHA, null, false, false
+                "Maria Souza", EMAIL, SENHA, null, false
         );
 
         assertFalha(resultado, MensagensUsuario.CAMPOS_OBRIGATORIOS.getMensagem());
@@ -278,7 +296,7 @@ public class UsuarioServiceTest {
         when(usuarioDAO.buscarPorEmail(EMAIL)).thenReturn(usuarioExistente);
 
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                "Maria Souza", EMAIL, SENHA, SENHA, false, false
+                "Maria Souza", EMAIL, SENHA, SENHA, false
         );
 
         assertFalha(resultado, MensagensUsuario.EMAIL_JA_CADASTRADO.getMensagem());
@@ -293,7 +311,7 @@ public class UsuarioServiceTest {
         when(usuarioDAO.buscarPorEmail(EMAIL)).thenReturn(null);
 
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                "Maria Souza", EMAIL, "123", "123", false, false
+                "Maria Souza", EMAIL, "123", "123", false
         );
 
         assertFalse(resultado.eValido());
@@ -307,7 +325,7 @@ public class UsuarioServiceTest {
         when(usuarioDAO.buscarPorEmail(EMAIL)).thenReturn(null);
 
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                "Maria Souza", EMAIL, SENHA, SENHA_DIFERENTE, false, false
+                "Maria Souza", EMAIL, SENHA, SENHA_DIFERENTE, false
         );
 
         assertFalha(resultado, MensagensUsuario.SENHAS_NAO_COINCIDEM.getMensagem());
@@ -320,7 +338,7 @@ public class UsuarioServiceTest {
         when(usuarioDAO.buscarPorEmail(EMAIL)).thenThrow(erroBanco());
 
         ResultadoOperacao<Usuario> resultado = usuarioService.cadastrarUsuario(
-                "Maria Souza", EMAIL, SENHA, SENHA, false, false
+                "Maria Souza", EMAIL, SENHA, SENHA, false
         );
 
         assertFalha(resultado, FALHA_BANCO);
@@ -357,9 +375,9 @@ public class UsuarioServiceTest {
                 novoUsuario(1, "Maria Souza", EMAIL, false, true)
         );
         when(usuarioDAO.listarTodos()).thenReturn(usuarios);
-        ResultadoOperacao<List<Usuario>> resultado = new ResultadoOperacao<>();
+        ResultadoOperacao<List<Usuario>> resultado;
 
-        usuarioService.listar(resultado);
+        resultado = usuarioService.listar();
 
         assertTrue(resultado.eValido());
         assertSame(usuarios, resultado.getResultado());
@@ -369,9 +387,9 @@ public class UsuarioServiceTest {
     @Test
     public void listarDeveAdicionarErroQuandoODaoFalhar() {
         when(usuarioDAO.listarTodos()).thenThrow(erroBanco());
-        ResultadoOperacao<List<Usuario>> resultado = new ResultadoOperacao<>();
+        ResultadoOperacao<List<Usuario>> resultado;
 
-        usuarioService.listar(resultado);
+        resultado = usuarioService.listar();
 
         assertFalha(resultado, FALHA_BANCO);
         assertNull(resultado.getResultado());

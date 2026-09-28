@@ -8,6 +8,7 @@ import eventosTela.EventosTela;
 import models.ResultadoOperacao;
 import models.Usuario;
 import navegacao.TipoTela;
+import observer.Observer;
 import services.GerenciadorEventosSingleton;
 import services.GerenciadorTelasService;
 import services.UsuarioService;
@@ -20,14 +21,14 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class TelaVisualizacaoPresenter implements TelaPresenter {
+public class TelaVisualizacaoPresenter implements TelaPresenter, Observer {
 
     private final EstadoTela estadoTela;
     private final UsuarioService usuarioService;
     private final TelaVisualizaView tela;
     private final Invoke invoke;
     private final GerenciadorTelasService gerenciadorTelas;
-    private final Usuario usuarioSelecionado;
+    private Usuario usuarioSelecionado;
 
     public TelaVisualizacaoPresenter(
             Usuario usuarioSelecionado,
@@ -42,9 +43,20 @@ public class TelaVisualizacaoPresenter implements TelaPresenter {
         this.invoke = new Invoke();
         this.estadoTela.setEstado(new VisualizandoUsuarioState(estadoTela));
 
+        GerenciadorEventosSingleton.getInstancia().registrar(this);
+
         configLabels();
         configuraBtns();
     }
+
+    @Override
+    public void update(){
+        usuarioSelecionado = usuarioService.buscarPorId(usuarioSelecionado.getId()).getResultado();
+        configLabels();
+
+    }
+
+
 
     private void configLabels() {
         tela.setTextoDadoNomeLabel(usuarioSelecionado.getNome());
@@ -53,6 +65,7 @@ public class TelaVisualizacaoPresenter implements TelaPresenter {
         tela.setTextoDadoNotificacoesLidasLabel(
                 Integer.toString(usuarioSelecionado.getQtdNotificacoesLidas())
         );
+        tela.setTextoDadoNotificacoesNaoLidaLabel(Integer.toString(usuarioSelecionado.getQtdNotificacoesNLidas()));
     }
 
     private void configuraBtnsFechamentoTela() {
@@ -107,10 +120,7 @@ public class TelaVisualizacaoPresenter implements TelaPresenter {
             ResultadoOperacao<Void> resultado = excluir.getResultado();
             if (resultado != null && resultado.eValido()) {
                 mostrarMensagem("Usuário excluido com sucesso!");
-                GerenciadorEventosSingleton.getInstancia().notificar(
-                        EventosTela.USUARIO_EXCLUIDO_COM_SUCESSO,
-                        null
-                );
+                GerenciadorEventosSingleton.getInstancia().notificar();
             } else if (resultado != null) {
                 mostrarMensagem(FormatarErros.unificarErros(resultado.getErros()));
                 return;
@@ -128,10 +138,8 @@ public class TelaVisualizacaoPresenter implements TelaPresenter {
     }
 
     private void fecharTela(){
-        gerenciadorTelas.abrirEdicao(
-                TipoTela.criarTelaEdicao(usuarioSelecionado.getId()),
-                usuarioSelecionado
-        );
+        gerenciadorTelas.fechar(TipoTela.TELA_VISUALIZAR.getTipo());
+        tela.dispose();
     }
 
     private void mostrarMensagem(String mensagem) {

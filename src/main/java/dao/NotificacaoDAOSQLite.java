@@ -1,5 +1,7 @@
 package dao;
 
+import excecoes.BancoDeDadosException;
+import excecoes.enums.MensagensErroBanco;
 import factory.ConexaoFactory;
 import models.Notificacao;
 
@@ -27,10 +29,41 @@ public class NotificacaoDAOSQLite implements NotificacaoDAO{
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir notificacao");
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_INSERIR_NOTIFICACOES.getTexto(), e);
         }
 
 
+    }
+
+    @Override
+    public Notificacao buscarNotificacao(int id){
+        String sql = "SELECT * FROM notificacoes WHERE id = ?";
+        Notificacao notificacao = null;
+
+        try (Connection conexao = ConexaoFactory.criarConexao()){
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setInt(1,id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                notificacao = new Notificacao();
+
+                notificacao.setId(rs.getInt("id"));
+                notificacao.setDestinatarioId(rs.getInt("destinatario_id"));
+                notificacao.setRemetenteId(rs.getInt("remetente_id"));
+                notificacao.setCriadaEm(rs.getString("criada_em"));
+                notificacao.setFoiLida(rs.getBoolean("foi_lida"));
+                notificacao.setConteudo(rs.getString("conteudo"));
+
+
+            }
+
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_LISTAR_NOTIFICACOES.getTexto(), e);
+        }
+
+        return notificacao;
     }
 
     @Override
@@ -58,7 +91,7 @@ public class NotificacaoDAOSQLite implements NotificacaoDAO{
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar notificacoes");
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_LISTAR_NOTIFICACOES.getTexto(), e);
         }
 
 
@@ -87,38 +120,92 @@ public class NotificacaoDAOSQLite implements NotificacaoDAO{
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao listar notificações do usuário");
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_LISTAR_NOTIFICACOES_DE_UM_USUARIO.getTexto(), e);
         }
 
         return notificacoes;
     }
 
     @Override
-    public void marcarComoLida(int notificacaoId, int destinatarioId) {
-        String sql = "UPDATE notificacoes SET foi_lida = 1 WHERE id = ? AND destinatario_id = ?";
+    public void marcarComoLida(int notificacaoId) {
+        String sql = "UPDATE notificacoes SET foi_lida = TRUE WHERE id = ? ";
 
         try (Connection conexao = ConexaoFactory.criarConexao();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setInt(1, notificacaoId);
-            stmt.setInt(2, destinatarioId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Erro ao atualizar notificação");
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_ATUALIZAR_NOTIFICACAO.getTexto(), e);
         }
     }
 
     @Override
-    public void lerNotificacao(Notificacao notificacao) {
-        String sql = "UPDATE notificacoes SET foi_lida = ? WHERE id = ?";
+    public int buscarQtdNotificacoesLidas(int id){
+        int qtd = 0;
 
+        String sql = "SELECT COUNT(*) as qtd FROM notificacoes WHERE destinatario_id = ? AND foi_lida = TRUE";
+        try (Connection conexao = ConexaoFactory.criarConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, id);
 
-        try (Connection conexao = ConexaoFactory.criarConexao()){
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setBoolean(1, notificacao.getFoiLida());
-            stmt.setInt(2, notificacao.getId());
-            stmt.executeUpdate();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    qtd = rs.getInt("qtd");
+                }
+            }
         } catch (SQLException e) {
-            System.out.println("Erro ao ler notificacao");
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_BUSCAR_QTD_NOTIFICACOES_LIDAS.getTexto(), e);
         }
+
+
+        return qtd;
     }
+
+
+    @Override
+    public int buscarQtdNotificacoesNLidas(int idUsuario){
+        int qtd = 0;
+
+        String sql = "SELECT COUNT(*) as qtd FROM notificacoes WHERE destinatario_id = ? AND foi_lida = FALSE";
+        try (Connection conexao = ConexaoFactory.criarConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    qtd = rs.getInt("qtd");
+                }
+            }
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_BUSCAR_QTD_NOTIFICACOES_N_LIDAS.getTexto(), e);
+        }
+
+
+        return qtd;
+    }
+    @Override
+    public int buscarQtdNotificacoesEnviadas(int idUsuario){
+
+        int qtd = 0;
+
+        String sql = "SELECT COUNT(*) as qtd FROM notificacoes WHERE remetente_id = ?";
+        try (Connection conexao = ConexaoFactory.criarConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    qtd = rs.getInt("qtd");
+                }
+            }
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(MensagensErroBanco.FALHA_BUSCAR_QTD_NOTIFICACOES_ENVIDAS.getTexto(), e);
+        }
+
+
+
+
+        return qtd;
+    }
+
 }

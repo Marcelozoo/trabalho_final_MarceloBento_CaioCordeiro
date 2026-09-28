@@ -5,6 +5,7 @@
 package views;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -13,6 +14,7 @@ import javax.swing.*;
 public class TelaAdminView extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAdminView.class.getName());
+    private  DefaultTableModel modeloTabela;
 
     /**
      * Creates new form TelaAdminView
@@ -22,9 +24,12 @@ public class TelaAdminView extends javax.swing.JFrame {
 
 
         tabelaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        modeloTabela = (DefaultTableModel) tabelaUsuarios.getModel();
 
         setVisible(true);
         setLocationRelativeTo(null);
+
+
     }
 
     /**
@@ -204,7 +209,7 @@ public class TelaAdminView extends javax.swing.JFrame {
     }
 
     public void setQtdNotificacoesNLidas(int qtd){
-        btnNotificacoes.setText(Integer.toString(qtd) + "Notificaações nãao lidas");
+        btnNotificacoes.setText(Integer.toString(qtd) + "   Notificações não lidas");
     }
     public JLabel getTipoUsuarioLabel() {
         return tipoUsuarioLabel;
@@ -242,10 +247,16 @@ public class TelaAdminView extends javax.swing.JFrame {
         return this.tabelaUsuarios.getSelectedRow();
     }
     
-    
+    public void preencherTabelaComUsuariosBuscados(String nome, String dataCadastro, String notificacoesEnviadas, String notificacoesLidas){
+        modeloTabela.addRow(new Object[]{nome, dataCadastro, notificacoesEnviadas, notificacoesLidas});
+    }
 
     public void mostrarMensagem(String mensagem){
         JOptionPane.showMessageDialog(this, mensagem);
+    }
+
+    public void limparTabela(){
+        modeloTabela.setRowCount(0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

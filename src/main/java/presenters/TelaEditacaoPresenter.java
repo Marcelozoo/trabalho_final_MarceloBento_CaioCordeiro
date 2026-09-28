@@ -6,6 +6,8 @@ import command.Invoke;
 import models.ResultadoOperacao;
 import models.Usuario;
 import navegacao.TipoTela;
+import observer.Observer;
+import services.GerenciadorEventosSingleton;
 import services.GerenciadorTelasService;
 import services.UsuarioService;
 import state.EditandoUsuarioState;
@@ -37,9 +39,13 @@ public class TelaEditacaoPresenter implements TelaPresenter {
         this.invoke = new Invoke();
         this.estadoTela.setEstado(new EditandoUsuarioState(estadoTela));
 
+
         preencherCampos();
         configBts();
     }
+
+
+
 
     private void preencherCampos() {
         tela.getNomeText().setText(usuario.getNome());
@@ -89,10 +95,15 @@ public class TelaEditacaoPresenter implements TelaPresenter {
             }
 
             tela.mostrarMensagem("Usuário atualizado com sucesso");
+            propagarEvento();
             gerenciadorTelas.fechar(TipoTela.criarTelaEdicao(usuario.getId()).getTipo());
             tela.dispose();
         });
 
+    }
+
+    private void propagarEvento(){
+        GerenciadorEventosSingleton.getInstancia().notificar();
     }
 
     private void confirmar() {
@@ -102,5 +113,6 @@ public class TelaEditacaoPresenter implements TelaPresenter {
     @Override
     public void fechar(){
         tela.dispose();
+
     }
 }

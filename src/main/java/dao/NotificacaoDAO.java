@@ -8,7 +8,10 @@ public interface NotificacaoDAO {
     void inserirNotificacao(Notificacao notificacao);
     List<Notificacao> listarNotificacoes();
     List<Notificacao> listarNotificacoesPorDestinatario(int destinatarioId);
-    void lerNotificacao(Notificacao notificacao);
-    void marcarComoLida(int notificacaoId, int destinatarioId);
+    void marcarComoLida(int notificacaoId);
+    Notificacao buscarNotificacao(int id);
+    int buscarQtdNotificacoesNLidas(int idUsuario);
+    int buscarQtdNotificacoesEnviadas(int idUsuario);
 
+    int buscarQtdNotificacoesLidas(int id);
 }
