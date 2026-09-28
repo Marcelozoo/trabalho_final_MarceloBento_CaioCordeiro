@@ -17,8 +17,8 @@ public class ListarCommand implements Command<List<Usuario>> {
 
     @Override
     public void executar() {
-        resultado = new ResultadoOperacao<>();
-        usuarioService.listar(resultado);
+
+        resultado = usuarioService.listar();
     }
 
     public ResultadoOperacao<List<Usuario>> getResultado() {

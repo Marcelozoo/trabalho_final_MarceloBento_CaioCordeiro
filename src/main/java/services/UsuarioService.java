@@ -1,24 +1,32 @@
 package services;
 
 import com.pss.senha.validacao.ValidadorSenha;
+import dao.NotificacaoDAO;
 import dao.UsuariosDAO;
+import eventosTela.EventosTela;
 import excecoes.BancoDeDadosException;
+import excecoes.enums.MensagensErroBanco;
 import excecoes.enums.MensagensUsuario;
+import models.Notificacao;
 import models.ResultadoOperacao;
 import models.Usuario;
 import org.mindrot.jbcrypt.BCrypt;
 import utilidades.FormatarErros;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UsuarioService {
 
     private final UsuariosDAO usuarioDAO;
     private final ValidadorSenha validadorSenha;
+    private final NotificacaoDAO notificacaoDAO;
 
-    public UsuarioService(UsuariosDAO usuariosDAO) {
+    public UsuarioService(UsuariosDAO usuariosDAO, NotificacaoDAO notificacaoDAO) {
         this.usuarioDAO = usuariosDAO;
+        this.notificacaoDAO = notificacaoDAO;
         this.validadorSenha = new ValidadorSenha();
+
     }
 
     public ResultadoOperacao<Usuario> autenticarLogin(String email, String senha){
@@ -41,6 +49,11 @@ public class UsuarioService {
                 resultado.adicionarErro(MensagensUsuario.USUARIO_NAO_AUTORIZADO.getMensagem());
                 return resultado;
             }
+
+
+            int id = usuario.getId();
+            usuario.setQtdNotificacoesNLidas(notificacaoDAO.buscarQtdNotificacoesNLidas(id));
+            usuario.setNotificacoesEnviadas(notificacaoDAO.buscarQtdNotificacoesEnviadas(id));
 
             resultado.adicionarResultado(usuario);
 
@@ -75,13 +88,51 @@ public class UsuarioService {
     public ResultadoOperacao<List<Usuario>> buscar(String nome) {
         ResultadoOperacao<List<Usuario>> resultado = new ResultadoOperacao<>();
         try {
-            if (!validarCamposObrigatorios(resultado, nome)) {
+            List<Usuario> usuarios = null;
+
+            if (nome == null) {
+                resultado.adicionarErro(MensagensUsuario.CAMPOS_OBRIGATORIOS.getMensagem());
                 return resultado;
             }
 
-            List<Usuario> usuarios = usuarioDAO.buscarPorNome(nome);
+            if (nome.isEmpty()){
+                usuarios = usuarioDAO.listarTodos();
+            }else{
+                usuarios = usuarioDAO.buscarPorNome(nome);
+            }
+
+            for (Usuario u : usuarios){
+                int id = u.getId();
+                u.setNotificacoesEnviadas(notificacaoDAO.buscarQtdNotificacoesEnviadas(id));
+                u.setQtdNotificacoesNLidas(notificacaoDAO.buscarQtdNotificacoesNLidas(id));
+                u.setQtdNotificacoesLidas(notificacaoDAO.buscarQtdNotificacoesLidas(id));
+            }
+
             resultado.adicionarResultado(usuarios);
 
+
+        } catch (BancoDeDadosException e) {
+            resultado.adicionarErro(e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    public ResultadoOperacao<Usuario> buscarPorId(int id) {
+        ResultadoOperacao<Usuario> resultado = new ResultadoOperacao<>();
+        try {
+            Usuario usuario = null;
+
+            if (id < 0) {
+                return resultado;
+            }
+            usuario = usuarioDAO.buscarPorId(id);
+
+            usuario.setNotificacoesEnviadas(notificacaoDAO.buscarQtdNotificacoesEnviadas(id));
+            usuario.setQtdNotificacoesNLidas(notificacaoDAO.buscarQtdNotificacoesNLidas(id));
+            usuario.setQtdNotificacoesLidas(notificacaoDAO.buscarQtdNotificacoesLidas(id));
+
+            resultado.adicionarResultado(usuario);
         } catch (BancoDeDadosException e) {
             resultado.adicionarErro(e.getMessage());
         }
@@ -143,8 +194,7 @@ public class UsuarioService {
             String email,
             String senha,
             String senhaNovamente,
-            boolean eAdmin,
-            boolean foiAutenticado
+            boolean eAdmin
     ) {
         ResultadoOperacao<Usuario> resultado = new ResultadoOperacao<>();
         try {
@@ -160,11 +210,14 @@ public class UsuarioService {
                     nome,
                     BCrypt.hashpw(senha, BCrypt.gensalt()),
                     primeiroUsuario || eAdmin,
-                    primeiroUsuario || foiAutenticado
+                    primeiroUsuario
             );
             usuario.setEmail(email);
             usuarioDAO.inserir(usuario);
             resultado.adicionarResultado(usuario);
+
+
+
 
         } catch (BancoDeDadosException e) {
             resultado.adicionarErro(e.getMessage());
@@ -188,7 +241,9 @@ public class UsuarioService {
 
     }
 
-    public void listar(ResultadoOperacao<List<Usuario>> resultado) {
+    public ResultadoOperacao<List<Usuario>> listar() {
+        ResultadoOperacao<List<Usuario>> resultado = new ResultadoOperacao<>();
+
         try {
             List<Usuario> usuarios = usuarioDAO.listarTodos();
             if (usuarios != null) {
@@ -197,6 +252,7 @@ public class UsuarioService {
         } catch (BancoDeDadosException e) {
             resultado.adicionarErro(e.getMessage());
         }
+        return resultado;
 
     }
 

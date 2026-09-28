@@ -32,9 +32,9 @@ public class GerenciadorEventosSingleton {
         observers.remove(observador);
     }
 
-    public void notificar(EventosTela tipo, Object dado){
+    public void notificar(){
         for(Observer o : observers){
-            o.update(tipo, dado);
+            o.update();
         }
     }
 }

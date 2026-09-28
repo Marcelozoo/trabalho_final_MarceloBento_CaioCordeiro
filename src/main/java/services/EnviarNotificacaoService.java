@@ -2,6 +2,7 @@ package services;
 
 import dao.NotificacaoDAO;
 import dao.UsuariosDAO;
+import excecoes.BancoDeDadosException;
 import excecoes.enums.MensagensNotificacao;
 import models.Notificacao;
 import models.ResultadoOperacao;
@@ -17,30 +18,38 @@ public class EnviarNotificacaoService {
         this.notificacaoDAO = notificacaoDAO;
     }
 
-    public void enviar(
+    public ResultadoOperacao<Void> enviar(
             String destino,
             String remetente,
-            String msg,
-            ResultadoOperacao<Void> resultado
+            String msg
+
     ) {
-        if (destino == null || remetente == null || msg == null
-                || destino.isEmpty() || remetente.isEmpty() || msg.isEmpty()) {
-            resultado.adicionarErro(MensagensNotificacao.CAMPOS_INVALIDOS.getMensagem());
-            return;
-        }
 
-        Usuario destinatarioUsuario = usuariosDAO.buscarPorEmail(destino);
-        Usuario remetenteUsuario = usuariosDAO.buscarPorEmail(remetente);
-        if (destinatarioUsuario == null || remetenteUsuario == null) {
-            resultado.adicionarErro(MensagensNotificacao.USUARIOS_NAO_ENCONTRADOS.getMensagem());
-            return;
-        }
+        ResultadoOperacao<Void> resultado = new ResultadoOperacao<>();
+        try {
+            if (destino == null || remetente == null || msg == null
+                    || destino.isEmpty() || remetente.isEmpty() || msg.isEmpty()) {
+                resultado.adicionarErro(MensagensNotificacao.CAMPOS_INVALIDOS.getMensagem());
+                return resultado;
+            }
 
-        notificacaoDAO.inserirNotificacao(new Notificacao(
-                msg,
-                remetenteUsuario.getId(),
-                destinatarioUsuario.getId()
-        ));
+            Usuario destinatarioUsuario = usuariosDAO.buscarPorEmail(destino);
+            Usuario remetenteUsuario = usuariosDAO.buscarPorEmail(remetente);
+            if (destinatarioUsuario == null || remetenteUsuario == null) {
+                resultado.adicionarErro(MensagensNotificacao.USUARIOS_NAO_ENCONTRADOS.getMensagem());
+                return resultado;
+            }
+
+            notificacaoDAO.inserirNotificacao(new Notificacao(
+                    msg,
+                    remetenteUsuario.getId(),
+                    destinatarioUsuario.getId(),
+                    remetenteUsuario.getNome()
+            ));
+        }catch (BancoDeDadosException e){
+            resultado.adicionarErro(e.getMessage());
+        }
         resultado.adicionarResultado(null);
+        return resultado;
     }
 }

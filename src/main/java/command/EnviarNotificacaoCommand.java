@@ -20,8 +20,7 @@ public class EnviarNotificacaoCommand implements  Command<Void>{
 
     @Override
     public void executar() {
-        resultado = new ResultadoOperacao<>();
-        notificacao.enviar(destinatario, remetente, msg, resultado);
+        resultado = notificacao.enviar(destinatario, remetente, msg);
     }
 
     @Override

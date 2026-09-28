@@ -40,6 +40,8 @@ public class TelaCadastroPresenter implements Observer, TelaPresenter {
         this.estadoTela.setEstado(new CadastrandoUsuarioState(estadoTela));
 
 
+
+
         btnConfigs();
         configuraFechamentoTela();
     }
@@ -78,9 +80,7 @@ public class TelaCadastroPresenter implements Observer, TelaPresenter {
     private boolean obterAdminSelecionado(){
         return tela.getAdminCheckBox().isSelected();
     }
-    private boolean obterAutenticadoSelecionado(){
-        return tela.getAutenticadoCheckBox().isSelected();
-    }
+    
 
 
     private ResultadoOperacao<Usuario> verificarCadastroUsuario(){
@@ -90,7 +90,6 @@ public class TelaCadastroPresenter implements Observer, TelaPresenter {
                 obterSenhaDigitada(),
                 obterSenhaNovamenteDigitada(),
                 obterAdminSelecionado(),
-                obterAutenticadoSelecionado(),
                 usuarioService
         );
         invoke.setComando(cadastrar);
@@ -107,7 +106,7 @@ public class TelaCadastroPresenter implements Observer, TelaPresenter {
             ResultadoOperacao<Usuario> resultado = verificarCadastroUsuario();
             if(ocorreuErros(resultado)){return;}
             mostrarMensagem(MensagensSucesso.CADASTRO_REALIZADO.getMensagem());
-            propagarEventoCadastro(resultado);
+            propagarEventoCadastro();
             limparCampos();
         });
     }
@@ -120,11 +119,8 @@ public class TelaCadastroPresenter implements Observer, TelaPresenter {
         return false;
     }
 
-    private void propagarEventoCadastro(ResultadoOperacao<Usuario> resultado){
-        GerenciadorEventosSingleton.getInstancia().notificar(
-                EventosTela.CADASTRO_REALIZADO_COM_SUCESSO,
-                resultado.getResultado()
-        );
+    private void propagarEventoCadastro(){
+        GerenciadorEventosSingleton.getInstancia().notificar();
     }
 
     private void mostrarMensagem(String mensagem){
@@ -138,7 +134,6 @@ public class TelaCadastroPresenter implements Observer, TelaPresenter {
     private void configuraBtnCheckBox(){
         if(!this.eAdmin){
             tela.desabilitarBtnAdminCheckBox();
-            tela.desabilitarBtnAutenticadoCheckBox();
         }
     }
 
@@ -151,7 +146,7 @@ public class TelaCadastroPresenter implements Observer, TelaPresenter {
     }
 
     @Override
-    public void update(EventosTela tipo, Object dados) {
+    public void update() {
     }
 
     public TelaCadastroView obterView() {

@@ -15,7 +15,6 @@ public class Usuario {
     private String criadoEm;
 
     private ArrayList<Notificacao> notificacoes;
-    private Integer qtdNotificacao = 0;
     private Integer qtdNotificacoesNLidas;
     private Integer qtdNotificacoesLidas = 0;
     private Integer qtdNotificacoesEnviadas = 0;
@@ -36,9 +35,10 @@ public class Usuario {
     public void addNotificacao(Notificacao msg) {
         this.notificacoes.add(msg);
     }
-    public void setGetQtdNotificacoesNLidas(int qtd){
+    public void setQtdNotificacoesNLidas(int qtd){
         this.qtdNotificacoesNLidas = qtd;
     }
+    public void setQtdNotificacoesLidas(int qtd){this.qtdNotificacoesLidas = qtd;}
     public void setId(int id){
         this.id = id;
     }
@@ -58,14 +58,11 @@ public class Usuario {
     public void setCriadoEm(String criadoEm){
         this.criadoEm = criadoEm;
     }
-    public void setQtdNotificacao(Integer qtdNotificacao) {
-        this.qtdNotificacao = qtdNotificacao;
-    }
     public void setFoiAutenticado(boolean foiAutenticado) {
         this.foiAutenticado = foiAutenticado;
     }
     public void setNotificacoesEnviadas(Integer qtd){
-        this.qtdNotificacao = qtd;
+        this.qtdNotificacoesEnviadas = qtd;
     }
 
     public Integer getQtdNotificacoesNLidas(){
