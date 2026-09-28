@@ -1,140 +1,165 @@
 package presenters;
 
-import com.pss.senha.validacao.ValidadorSenha;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import models.usuario.Usuario;
-import java.util.List;
-import services.factoryuser.UsuarioFactory;
-import services.usuario.GerenciaUsuariosService;
+import command.CadastrarCommand;
+import command.Command;
+import command.Invoke;
+import eventosTela.EventosTela;
+import mensagens.MensagensSucesso;
+import models.ResultadoOperacao;
+import models.Usuario;
+import navegacao.TipoTela;
+import observer.Observer;
+import services.GerenciadorEventosSingleton;
+import services.GerenciadorTelasService;
+import services.UsuarioService;
+import state.CadastrandoUsuarioState;
+import state.EstadoTela;
+import utilidades.FormatarErros;
 import views.TelaCadastroView;
-import com.ufes.logadapter.services.GerenciadorDeArquivoService;
 
-public class TelaCadastroPresenter {
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-    final private TelaCadastroView telaCadastro;
-    final private ValidadorSenha validador;
-    final private ArrayList<Usuario> lista;
-    final private GerenciadorDeArquivoService gerenciadorArquivo;
-    final private String OPERACAO = "Inclusão";
-    private String tipoArquivo;
+public class TelaCadastroPresenter implements Observer, TelaPresenter {
 
-    public TelaCadastroPresenter(ArrayList<Usuario> lista, TelaPrincipalPresenter telaP, TelaSistemaPresenter tela) {
-        this.telaCadastro = new TelaCadastroView();
-        this.telaCadastro.setVisible(true);
-        this.lista = lista;
-        this.gerenciadorArquivo = new GerenciadorDeArquivoService();
+    private final UsuarioService usuarioService;
+    private final TelaCadastroView tela;
+    private final GerenciadorTelasService gerenciadorTelas;
+    private final EstadoTela estadoTela;
+    private final Invoke invoke;
+    private final boolean eAdmin;
 
-        this.validador = new ValidadorSenha();
-        configuraBtnRealizarCadastro(telaP, tela);
+    public TelaCadastroPresenter(boolean eAdmin, UsuarioService usuarioService, GerenciadorTelasService gerenciadorTelas) {
+        this.eAdmin = eAdmin;
+        this.usuarioService = usuarioService;
+        this.gerenciadorTelas = gerenciadorTelas;
+        this.tela = new TelaCadastroView();
+        this.estadoTela = new EstadoTela();
+        this.invoke = new Invoke();
+        this.estadoTela.setEstado(new CadastrandoUsuarioState(estadoTela));
 
+
+        btnConfigs();
+        configuraFechamentoTela();
     }
 
-    public JInternalFrame getTelaCadastroView() {
-        return this.telaCadastro;
-    }
-
-    private void configuraBtnRealizarCadastro(TelaPrincipalPresenter telaP, TelaSistemaPresenter tela) {
-        telaCadastro.getBtnRealizarCadastro().addActionListener(new ActionListener() {
+    private void configuraFechamentoTela() {
+        tela.addWindowListener(new WindowAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    cadastraUsuario(telaP, tela);
-                } catch (RuntimeException excecao) {
-                    gerenciadorArquivo.processarLog(
-                            excecao.getMessage(),
-                            tipoArquivo,
-                            OPERACAO,
-                            telaCadastro.getCampoTextoNome().getText(),
-                            LocalDate.now(),
-                            LocalTime.now(),
-                            true);
-
-                    JOptionPane.showMessageDialog(null, excecao.getMessage());
-                } finally {
-                    limpaCampos();
-                }
-
+            public void windowClosing(WindowEvent e) {
+                gerenciadorTelas.fechar(TipoTela.TELA_CADASTRO.getTipo());
             }
         });
     }
 
-    private void cadastraUsuario(TelaPrincipalPresenter telaP, TelaSistemaPresenter tela) {
-        String nome = telaCadastro.getCampoTextoNome().getText();
-        String senha = telaCadastro.getCampoTextoSenha().getText();
-        String senhaNovamente = telaCadastro.getCampoTextoSenhaNovamente().getText();
-        this.verificaCamposVazios(nome, senha, senhaNovamente);
-        this.verificaSenhasIguais(senha, senhaNovamente);
-        this.validarSenha(senha);
-        this.tipoArquivo = telaP.getTipoArquivo();
+    private void configuraBtnCancelar(){
+        tela.getBtnCancelar().addActionListener(e -> {
+            gerenciadorTelas.fechar(TipoTela.TELA_CADASTRO.getTipo());
+            tela.dispose();
+        });
+    }
 
-        if (lista.isEmpty()) {
-            UsuarioFactory user = UsuarioFactory.getUsuarioFactory("Admin");
-            lista.add(user.getUsuario(nome, senha, true, true));
-            telaP.remove(telaCadastro);
-            sucessoAoCadastrar();
-            this.gerenciadorArquivo.processarLog("", tipoArquivo, OPERACAO, nome, LocalDate.now(), LocalTime.now(),
-                    true);
-            tela.inicializar();
-        } else {
-            GerenciaUsuariosService gerenciaNomes = new GerenciaUsuariosService();
-            if (!gerenciaNomes.verificaExistenciaNomeUsuario(nome, lista)) {
-                UsuarioFactory user = UsuarioFactory.getUsuarioFactory("UsuarioComum");
-                lista.add(user.getUsuario(nome, senha, false, false));
-                telaP.remove(telaCadastro);
-                sucessoAoCadastrar();
-                this.gerenciadorArquivo.processarLog("", tipoArquivo, OPERACAO, nome, LocalDate.now(), LocalTime.now(),
-                        false);
-                tela.inicializar();
-            } else {
-                throw new RuntimeException("Nome de usuário já existe!");
-            }
+    private String obterNomeDigitado(){
+        return tela.getUsuarioText();
+    }
+    private String obterEmailDigitado(){
+        return tela.getEmailText();
+    }
+
+    private String obterSenhaDigitada(){
+        return new String(tela.getSenhaText());
+    }
+
+    private String obterSenhaNovamenteDigitada(){
+        return new String(tela.getSenhaNovamenteText());
+    }
+
+    private boolean obterAdminSelecionado(){
+        return tela.getAdminCheckBox().isSelected();
+    }
+    private boolean obterAutenticadoSelecionado(){
+        return tela.getAutenticadoCheckBox().isSelected();
+    }
+
+
+    private ResultadoOperacao<Usuario> verificarCadastroUsuario(){
+        Command<Usuario> cadastrar = new CadastrarCommand(
+                obterNomeDigitado(),
+                obterEmailDigitado(),
+                obterSenhaDigitada(),
+                obterSenhaNovamenteDigitada(),
+                obterAdminSelecionado(),
+                obterAutenticadoSelecionado(),
+                usuarioService
+        );
+        invoke.setComando(cadastrar);
+        estadoTela.cadastrar(invoke);
+
+        return cadastrar.getResultado();
+    }
+
+
+    private void configuraBtnCadastrar(){
+        tela.getBtnCadastrar().addActionListener(e -> {
+
+
+            ResultadoOperacao<Usuario> resultado = verificarCadastroUsuario();
+            if(ocorreuErros(resultado)){return;}
+            mostrarMensagem(MensagensSucesso.CADASTRO_REALIZADO.getMensagem());
+            propagarEventoCadastro(resultado);
+            limparCampos();
+        });
+    }
+
+    private boolean ocorreuErros(ResultadoOperacao<Usuario> resultado){
+        if (!resultado.eValido()) {
+            tela.mostrarMensagem(FormatarErros.unificarErros(resultado.getErros()));
+            return true;
+        }
+        return false;
+    }
+
+    private void propagarEventoCadastro(ResultadoOperacao<Usuario> resultado){
+        GerenciadorEventosSingleton.getInstancia().notificar(
+                EventosTela.CADASTRO_REALIZADO_COM_SUCESSO,
+                resultado.getResultado()
+        );
+    }
+
+    private void mostrarMensagem(String mensagem){
+        tela.mostrarMensagem(mensagem);
+    }
+
+    private void limparCampos(){
+        tela.limparCampos();
+    }
+
+    private void configuraBtnCheckBox(){
+        if(!this.eAdmin){
+            tela.desabilitarBtnAdminCheckBox();
+            tela.desabilitarBtnAutenticadoCheckBox();
         }
     }
 
-    private void validarSenha(String senha) {
-        StringBuilder builder = new StringBuilder();
+    private void btnConfigs() {
+        configuraBtnCheckBox();
+        configuraFechamentoTela();
+        configuraBtnCancelar();
+        configuraBtnCadastrar();
 
-        List<String> listaValidadoresSenha = this.validador.validar(senha);
-        if (!listaValidadoresSenha.isEmpty()) {
-            for (String item : listaValidadoresSenha) {
-                builder.append(item);
-                builder.append("\n");
-            }
-            throw new RuntimeException(builder.toString());
-        }
     }
 
-    private void sucessoAoCadastrar() {
-        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+    @Override
+    public void update(EventosTela tipo, Object dados) {
     }
 
-    private void limpaCampos() {
-        JTextField nome = this.telaCadastro.getCampoTextoNome();
-        JTextField senha = this.telaCadastro.getCampoTextoSenha();
-        JTextField senhaNovamente = this.telaCadastro.getCampoTextoSenhaNovamente();
-
-        nome.setText("");
-        senha.setText("");
-        senhaNovamente.setText("");
+    public TelaCadastroView obterView() {
+        return tela;
     }
 
-    private void verificaSenhasIguais(String senha, String senhaNovamente) {
-        if (!senha.equals(senhaNovamente)) {
-            throw new RuntimeException("As senhas não coincidem!");
-        }
+    @Override
+    public void fechar(){
+        tela.dispose();
     }
-
-    private void verificaCamposVazios(String nome, String senha, String senhaNovamente) {
-        if (nome.isEmpty() || senha.isEmpty() || senhaNovamente.isEmpty()) {
-            throw new RuntimeException("Preencha os campos vazios!");
-        }
-    }
-
 }
